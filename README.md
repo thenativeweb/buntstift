@@ -2,6 +2,8 @@
 
 buntstift makes the CLI colorful.
 
+![buntstift](https://github.com/thenativeweb/buntstift/raw/master/images/logo.jpg "buntstift")
+
 ## Installation
 
     $ npm install buntstift
