@@ -1,0 +1,37 @@
+{
+  "name": "buntstift",
+  "version": "0.0.0",
+  "description": "buntstift makes the CLI colorful.",
+  "contributors": [
+    {
+      "name": "Golo Roden",
+      "email": "golo.roden@thenativeweb.io"
+    },
+    {
+      "name": "Matthias Wagler",
+      "email": "matthias.wagler@thenativeweb.io"
+    },
+    {
+      "name": "Michael Scherer",
+      "email": "mail@michael-scherer.net"
+    }
+  ],
+  "main": "lib/buntstift.js",
+  "dependencies": {
+    "chalk": "0.5.1",
+    "char-spinner": "1.0.1",
+    "markup-js": "1.5.21"
+  },
+  "devDependencies": {
+    "assertthat": "0.3.0",
+    "grunt": "0.4.5",
+    "isansi": "0.0.2",
+    "record-stdstreams": "0.0.3",
+    "tourism": "0.10.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/thenativeweb/buntstift.git"
+  },
+  "license": "MIT"
+}
