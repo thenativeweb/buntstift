@@ -16,14 +16,14 @@ First you need to integrate buntstift into your application.
 var buntstift = require('buntstift');
 ```
 
-To write messages to the console use the `success` and `fail` functions to show that your application has succeeded or failed. If you want to provide additional information, use the `info` and `verbose` functions. In case of any warnings, use the `warn` function.
+To write messages to the console use the `success` and `error` functions to show that your application has succeeded or failed. If you want to provide additional information, use the `info` and `verbose` functions. In case of any warnings, use the `warn` function.
 
 ```javascript
 buntstift.info('Updating...')
 buntstift.success('Done.');
 ```
 
-*Please note that `fail` and `warn` write messages to the standard error stream, all other functions write them to the standard output stream.*
+*Please note that `error` and `warn` write messages to the standard error stream, all other functions write them to the standard output stream.*
 
 ### Formatting messages
 
@@ -42,6 +42,14 @@ Besides, you can use the `options` object to change the prefix of the various me
 ```javascript
 buntstift.error('App stopped.', { prefix: 'X' });
 // => X App stopped.
+```
+
+## Printing blank lines
+
+To print a blank line call the `newLine` function.
+
+```javascript
+buntstift.newLine();
 ```
 
 ## Using lists
@@ -82,9 +90,9 @@ The individual cells become padded automatically: Numbers are aligned to the rig
 
 ## Enabling verbose and quiet mode
 
-By default, only messages written by `success`, `fail`, `info` and `warn` are shown on the console. To enable `verbose` as well, provide the `--verbose` command line switch when running the application.
+By default, only messages written by `success`, `error`, `info` and `warn` are shown on the console. To enable `verbose` as well, provide the `--verbose` command line switch when running the application.
 
-If you want to disable any output except `fail` and `warn`, provide the `--quiet` command line switch.
+If you want to disable any output except `error` and `warn`, provide the `--quiet` command line switch.
 
 ## Enabling and disabling colors
 
@@ -106,6 +114,14 @@ buntstift.waitFor(function (done) {
 *Please note that the loading indicator is written to the application's standard error stream.*
 
 If you run the application using the `--quiet` command line switch, no loading indicator will be shown at all.
+
+## Shutting down an application
+
+To shutdown an application, call the `exit` function. Optionally, you may specify an exit code; if you don't, `0` is used.
+
+```javascript
+buntstift.exit();
+```
 
 ## Running the build
 

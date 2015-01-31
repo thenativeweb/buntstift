@@ -14,15 +14,15 @@ suite('buntstift', function () {
     done();
   });
 
-  suite('blankLine', function () {
+  suite('newLine', function () {
     test('is a function.', function (done) {
-      assert.that(buntstift.blankLine, is.ofType('function'));
+      assert.that(buntstift.newLine, is.ofType('function'));
       done();
     });
 
     test('writes a blank line to stdout.', function (done) {
       record(function (stop) {
-        buntstift.blankLine();
+        buntstift.newLine();
         stop();
       }, function (stdoutText) {
         assert.that(stdoutText, is.equalTo('\n'));
@@ -33,7 +33,7 @@ suite('buntstift', function () {
     test('does nothing when --quiet is set.', function (done) {
       process.argv.push('--quiet');
       record(function (stop) {
-        buntstift.blankLine();
+        buntstift.newLine();
         stop();
       }, function (stdoutText) {
         assert.that(stdoutText, is.equalTo(''));
@@ -113,15 +113,15 @@ suite('buntstift', function () {
     });
   });
 
-  suite('fail', function () {
+  suite('error', function () {
     test('is a function.', function (done) {
-      assert.that(buntstift.fail, is.ofType('function'));
+      assert.that(buntstift.error, is.ofType('function'));
       done();
     });
 
     test('writes a message in red and bold to stderr.', function (done) {
       record(function (stop) {
-        buntstift.fail('foo');
+        buntstift.error('foo');
         stop();
       }, function (stdoutText, stderrText) {
         assert.that(isAnsi.red(stderrText), is.true());
@@ -132,7 +132,7 @@ suite('buntstift', function () {
 
     test('writes a message with a cross.', function (done) {
       record(function (stop) {
-        buntstift.fail('foo');
+        buntstift.error('foo');
         stop();
       }, function (stdoutText, stderrText) {
         assert.that(chalk.stripColor(stderrText), is.equalTo(unicode.crossMark + ' foo\n'));
@@ -142,7 +142,7 @@ suite('buntstift', function () {
 
     test('writes a stringified message if necessary.', function (done) {
       record(function (stop) {
-        buntstift.fail(23);
+        buntstift.error(23);
         stop();
       }, function (stdoutText, stderrText) {
         assert.that(chalk.stripColor(stderrText), is.equalTo(unicode.crossMark + ' 23\n'));
@@ -152,7 +152,7 @@ suite('buntstift', function () {
 
     test('supports template strings.', function (done) {
       record(function (stop) {
-        buntstift.fail('foo {{bar}}', { bar: 'baz' });
+        buntstift.error('foo {{bar}}', { bar: 'baz' });
         stop();
       }, function (stdoutText, stderrText) {
         assert.that(chalk.stripColor(stderrText), is.equalTo(unicode.crossMark + ' foo baz\n'));
@@ -162,7 +162,7 @@ suite('buntstift', function () {
 
     test('replaces the check mark if a prefix is explicitly given.', function (done) {
       record(function (stop) {
-        buntstift.fail('foo', { prefix: '-' });
+        buntstift.error('foo', { prefix: '-' });
         stop();
       }, function (stdoutText, stderrText) {
         assert.that(chalk.stripColor(stderrText), is.equalTo('- foo\n'));
@@ -173,7 +173,7 @@ suite('buntstift', function () {
     test('still works when --quiet is set.', function (done) {
       process.argv.push('--quiet');
       record(function (stop) {
-        buntstift.fail('foo');
+        buntstift.error('foo');
         stop();
       }, function (stdoutText, stderrText) {
         assert.that(chalk.stripColor(stderrText), is.equalTo(unicode.crossMark + ' foo\n'));
@@ -575,6 +575,13 @@ suite('buntstift', function () {
         process.argv.pop();
         done();
       });
+    });
+  });
+
+  suite('exit', function () {
+    test('is a function.', function (done) {
+      assert.that(buntstift.exit, is.ofType('function'));
+      done();
     });
   });
 });
