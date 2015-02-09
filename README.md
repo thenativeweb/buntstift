@@ -90,9 +90,9 @@ The individual cells become padded automatically: Numbers are aligned to the rig
 
 ## Enabling verbose and quiet mode
 
-By default, only messages written by `success`, `error`, `info` and `warn` are shown on the console. To enable `verbose` as well, provide the `--verbose` command line switch when running the application.
+By default, only messages written by `success`, `error`, `info` and `warn` are shown on the console. To enable `verbose` as well, provide the `--verbose` command line switch when running the application. Alternatively, you may use its short form, `-v`.
 
-If you want to disable any output except `error` and `warn`, provide the `--quiet` command line switch.
+If you want to disable any output except `error` and `warn`, provide the `--quiet` command line switch. Again, you may use its short form, `-q`.
 
 ## Enabling and disabling colors
 

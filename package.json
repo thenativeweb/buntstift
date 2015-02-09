@@ -23,11 +23,11 @@
     "markup-js": "1.5.21"
   },
   "devDependencies": {
-    "assertthat": "0.3.0",
+    "assertthat": "0.4.1",
     "grunt": "0.4.5",
     "isansi": "0.0.2",
     "record-stdstreams": "0.0.3",
-    "tourism": "0.11.2"
+    "tourism": "0.13.1"
   },
   "repository": {
     "type": "git",

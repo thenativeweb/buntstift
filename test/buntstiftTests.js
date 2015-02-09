@@ -10,13 +10,13 @@ var buntstift = require('../lib/buntstift'),
 
 suite('buntstift', function () {
   test('is an object.', function (done) {
-    assert.that(buntstift, is.ofType('object'));
+    assert.that(buntstift).is.ofType('object');
     done();
   });
 
   suite('newLine', function () {
     test('is a function.', function (done) {
-      assert.that(buntstift.newLine, is.ofType('function'));
+      assert.that(buntstift.newLine).is.ofType('function');
       done();
     });
 
@@ -25,7 +25,7 @@ suite('buntstift', function () {
         buntstift.newLine();
         stop();
       }, function (stdoutText) {
-        assert.that(stdoutText, is.equalTo('\n'));
+        assert.that(stdoutText).is.equalTo('\n');
         done();
       });
     });
@@ -36,7 +36,7 @@ suite('buntstift', function () {
         buntstift.newLine();
         stop();
       }, function (stdoutText) {
-        assert.that(stdoutText, is.equalTo(''));
+        assert.that(stdoutText).is.equalTo('');
         process.argv.pop();
         done();
       });
@@ -45,7 +45,7 @@ suite('buntstift', function () {
 
   suite('success', function () {
     test('is a function.', function (done) {
-      assert.that(buntstift.success, is.ofType('function'));
+      assert.that(buntstift.success).is.ofType('function');
       done();
     });
 
@@ -54,8 +54,8 @@ suite('buntstift', function () {
         buntstift.success('foo');
         stop();
       }, function (stdoutText) {
-        assert.that(isAnsi.green(stdoutText), is.true());
-        assert.that(isAnsi.bold(stdoutText), is.true());
+        assert.that(isAnsi.green(stdoutText)).is.true();
+        assert.that(isAnsi.bold(stdoutText)).is.true();
         done();
       });
     });
@@ -65,7 +65,7 @@ suite('buntstift', function () {
         buntstift.success('foo');
         stop();
       }, function (stdoutText) {
-        assert.that(chalk.stripColor(stdoutText), is.equalTo(unicode.checkMark + ' foo\n'));
+        assert.that(chalk.stripColor(stdoutText)).is.equalTo(unicode.checkMark + ' foo\n');
         done();
       });
     });
@@ -75,7 +75,7 @@ suite('buntstift', function () {
         buntstift.success(23);
         stop();
       }, function (stdoutText) {
-        assert.that(chalk.stripColor(stdoutText), is.equalTo(unicode.checkMark + ' 23\n'));
+        assert.that(chalk.stripColor(stdoutText)).is.equalTo(unicode.checkMark + ' 23\n');
         done();
       });
     });
@@ -85,7 +85,7 @@ suite('buntstift', function () {
         buntstift.success('foo {{bar}}', { bar: 'baz' });
         stop();
       }, function (stdoutText) {
-        assert.that(chalk.stripColor(stdoutText), is.equalTo(unicode.checkMark + ' foo baz\n'));
+        assert.that(chalk.stripColor(stdoutText)).is.equalTo(unicode.checkMark + ' foo baz\n');
         done();
       });
     });
@@ -95,7 +95,7 @@ suite('buntstift', function () {
         buntstift.success('foo', { prefix: '-' });
         stop();
       }, function (stdoutText) {
-        assert.that(chalk.stripColor(stdoutText), is.equalTo('- foo\n'));
+        assert.that(chalk.stripColor(stdoutText)).is.equalTo('- foo\n');
         done();
       });
     });
@@ -106,7 +106,7 @@ suite('buntstift', function () {
         buntstift.success('foo');
         stop();
       }, function (stdoutText) {
-        assert.that(stdoutText, is.equalTo(''));
+        assert.that(stdoutText).is.equalTo('');
         process.argv.pop();
         done();
       });
@@ -115,7 +115,7 @@ suite('buntstift', function () {
 
   suite('error', function () {
     test('is a function.', function (done) {
-      assert.that(buntstift.error, is.ofType('function'));
+      assert.that(buntstift.error).is.ofType('function');
       done();
     });
 
@@ -124,8 +124,8 @@ suite('buntstift', function () {
         buntstift.error('foo');
         stop();
       }, function (stdoutText, stderrText) {
-        assert.that(isAnsi.red(stderrText), is.true());
-        assert.that(isAnsi.bold(stderrText), is.true());
+        assert.that(isAnsi.red(stderrText)).is.true();
+        assert.that(isAnsi.bold(stderrText)).is.true();
         done();
       });
     });
@@ -135,7 +135,7 @@ suite('buntstift', function () {
         buntstift.error('foo');
         stop();
       }, function (stdoutText, stderrText) {
-        assert.that(chalk.stripColor(stderrText), is.equalTo(unicode.crossMark + ' foo\n'));
+        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode.crossMark + ' foo\n');
         done();
       });
     });
@@ -145,7 +145,7 @@ suite('buntstift', function () {
         buntstift.error(23);
         stop();
       }, function (stdoutText, stderrText) {
-        assert.that(chalk.stripColor(stderrText), is.equalTo(unicode.crossMark + ' 23\n'));
+        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode.crossMark + ' 23\n');
         done();
       });
     });
@@ -155,7 +155,7 @@ suite('buntstift', function () {
         buntstift.error('foo {{bar}}', { bar: 'baz' });
         stop();
       }, function (stdoutText, stderrText) {
-        assert.that(chalk.stripColor(stderrText), is.equalTo(unicode.crossMark + ' foo baz\n'));
+        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode.crossMark + ' foo baz\n');
         done();
       });
     });
@@ -165,7 +165,7 @@ suite('buntstift', function () {
         buntstift.error('foo', { prefix: '-' });
         stop();
       }, function (stdoutText, stderrText) {
-        assert.that(chalk.stripColor(stderrText), is.equalTo('- foo\n'));
+        assert.that(chalk.stripColor(stderrText)).is.equalTo('- foo\n');
         done();
       });
     });
@@ -176,7 +176,7 @@ suite('buntstift', function () {
         buntstift.error('foo');
         stop();
       }, function (stdoutText, stderrText) {
-        assert.that(chalk.stripColor(stderrText), is.equalTo(unicode.crossMark + ' foo\n'));
+        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode.crossMark + ' foo\n');
         process.argv.pop();
         done();
       });
@@ -185,7 +185,7 @@ suite('buntstift', function () {
 
   suite('warn', function () {
     test('is a function.', function (done) {
-      assert.that(buntstift.warn, is.ofType('function'));
+      assert.that(buntstift.warn).is.ofType('function');
       done();
     });
 
@@ -194,8 +194,8 @@ suite('buntstift', function () {
         buntstift.warn('foo');
         stop();
       }, function (stdoutText, stderrText) {
-        assert.that(isAnsi.yellow(stderrText), is.true());
-        assert.that(isAnsi.bold(stderrText), is.true());
+        assert.that(isAnsi.yellow(stderrText)).is.true();
+        assert.that(isAnsi.bold(stderrText)).is.true();
         done();
       });
     });
@@ -205,7 +205,7 @@ suite('buntstift', function () {
         buntstift.warn('foo');
         stop();
       }, function (stdoutText, stderrText) {
-        assert.that(chalk.stripColor(stderrText), is.equalTo(unicode.rightPointingPointer + ' foo\n'));
+        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode.rightPointingPointer + ' foo\n');
         done();
       });
     });
@@ -215,7 +215,7 @@ suite('buntstift', function () {
         buntstift.warn(23);
         stop();
       }, function (stdoutText, stderrText) {
-        assert.that(chalk.stripColor(stderrText), is.equalTo(unicode.rightPointingPointer + ' 23\n'));
+        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode.rightPointingPointer + ' 23\n');
         done();
       });
     });
@@ -225,7 +225,7 @@ suite('buntstift', function () {
         buntstift.warn('foo {{bar}}', { bar: 'baz' });
         stop();
       }, function (stdoutText, stderrText) {
-        assert.that(chalk.stripColor(stderrText), is.equalTo(unicode.rightPointingPointer + ' foo baz\n'));
+        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode.rightPointingPointer + ' foo baz\n');
         done();
       });
     });
@@ -235,7 +235,7 @@ suite('buntstift', function () {
         buntstift.warn('foo', { prefix: '-' });
         stop();
       }, function (stdoutText, stderrText) {
-        assert.that(chalk.stripColor(stderrText), is.equalTo('- foo\n'));
+        assert.that(chalk.stripColor(stderrText)).is.equalTo('- foo\n');
         done();
       });
     });
@@ -246,7 +246,7 @@ suite('buntstift', function () {
         buntstift.warn('foo');
         stop();
       }, function (stdoutText, stderrText) {
-        assert.that(chalk.stripColor(stderrText), is.equalTo(unicode.rightPointingPointer + ' foo\n'));
+        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode.rightPointingPointer + ' foo\n');
         process.argv.pop();
         done();
       });
@@ -255,7 +255,7 @@ suite('buntstift', function () {
 
   suite('info', function () {
     test('is a function.', function (done) {
-      assert.that(buntstift.info, is.ofType('function'));
+      assert.that(buntstift.info).is.ofType('function');
       done();
     });
 
@@ -264,7 +264,7 @@ suite('buntstift', function () {
         buntstift.info('foo');
         stop();
       }, function (stdoutText) {
-        assert.that(isAnsi.white(stdoutText), is.true());
+        assert.that(isAnsi.white(stdoutText)).is.true();
         done();
       });
     });
@@ -274,7 +274,7 @@ suite('buntstift', function () {
         buntstift.info('foo');
         stop();
       }, function (stdoutText) {
-        assert.that(chalk.stripColor(stdoutText), is.equalTo('  foo\n'));
+        assert.that(chalk.stripColor(stdoutText)).is.equalTo('  foo\n');
         done();
       });
     });
@@ -284,7 +284,7 @@ suite('buntstift', function () {
         buntstift.info(23);
         stop();
       }, function (stdoutText) {
-        assert.that(chalk.stripColor(stdoutText), is.equalTo('  23\n'));
+        assert.that(chalk.stripColor(stdoutText)).is.equalTo('  23\n');
         done();
       });
     });
@@ -294,7 +294,7 @@ suite('buntstift', function () {
         buntstift.info('foo {{bar}}', { bar: 'baz' });
         stop();
       }, function (stdoutText) {
-        assert.that(chalk.stripColor(stdoutText), is.equalTo('  foo baz\n'));
+        assert.that(chalk.stripColor(stdoutText)).is.equalTo('  foo baz\n');
         done();
       });
     });
@@ -304,7 +304,7 @@ suite('buntstift', function () {
         buntstift.info('foo', { prefix: '-' });
         stop();
       }, function (stdoutText) {
-        assert.that(chalk.stripColor(stdoutText), is.equalTo('- foo\n'));
+        assert.that(chalk.stripColor(stdoutText)).is.equalTo('- foo\n');
         done();
       });
     });
@@ -315,7 +315,7 @@ suite('buntstift', function () {
         buntstift.info('foo');
         stop();
       }, function (stdoutText) {
-        assert.that(stdoutText, is.equalTo(''));
+        assert.that(stdoutText).is.equalTo('');
         process.argv.pop();
         done();
       });
@@ -324,7 +324,7 @@ suite('buntstift', function () {
 
   suite('verbose', function () {
     test('is a function.', function (done) {
-      assert.that(buntstift.verbose, is.ofType('function'));
+      assert.that(buntstift.verbose).is.ofType('function');
       done();
     });
 
@@ -342,7 +342,7 @@ suite('buntstift', function () {
           buntstift.verbose('foo');
           stop();
         }, function (stdoutText) {
-          assert.that(isAnsi.gray(stdoutText), is.true());
+          assert.that(isAnsi.gray(stdoutText)).is.true();
           done();
         });
       });
@@ -352,7 +352,7 @@ suite('buntstift', function () {
           buntstift.verbose('foo');
           stop();
         }, function (stdoutText) {
-          assert.that(chalk.stripColor(stdoutText), is.equalTo('  foo\n'));
+          assert.that(chalk.stripColor(stdoutText)).is.equalTo('  foo\n');
           done();
         });
       });
@@ -362,7 +362,7 @@ suite('buntstift', function () {
           buntstift.verbose(23);
           stop();
         }, function (stdoutText) {
-          assert.that(chalk.stripColor(stdoutText), is.equalTo('  23\n'));
+          assert.that(chalk.stripColor(stdoutText)).is.equalTo('  23\n');
           done();
         });
       });
@@ -372,7 +372,7 @@ suite('buntstift', function () {
           buntstift.verbose('foo {{bar}}', { bar: 'baz' });
           stop();
         }, function (stdoutText) {
-          assert.that(chalk.stripColor(stdoutText), is.equalTo('  foo baz\n'));
+          assert.that(chalk.stripColor(stdoutText)).is.equalTo('  foo baz\n');
           done();
         });
       });
@@ -382,7 +382,7 @@ suite('buntstift', function () {
           buntstift.verbose('foo', { prefix: '-' });
           stop();
         }, function (stdoutText) {
-          assert.that(chalk.stripColor(stdoutText), is.equalTo('- foo\n'));
+          assert.that(chalk.stripColor(stdoutText)).is.equalTo('- foo\n');
           done();
         });
       });
@@ -393,7 +393,7 @@ suite('buntstift', function () {
           buntstift.verbose('foo');
           stop();
         }, function (stdoutText) {
-          assert.that(stdoutText, is.equalTo(''));
+          assert.that(stdoutText).is.equalTo('');
           process.argv.pop();
           done();
         });
@@ -406,7 +406,7 @@ suite('buntstift', function () {
           buntstift.verbose('foo');
           stop();
         }, function (stdoutText) {
-          assert.that(stdoutText, is.equalTo(''));
+          assert.that(stdoutText).is.equalTo('');
           done();
         });
       });
@@ -415,7 +415,7 @@ suite('buntstift', function () {
 
   suite('list', function () {
     test('is a function.', function (done) {
-      assert.that(buntstift.list, is.ofType('function'));
+      assert.that(buntstift.list).is.ofType('function');
       done();
     });
 
@@ -424,7 +424,7 @@ suite('buntstift', function () {
         buntstift.list('foo');
         stop();
       }, function (stdoutText) {
-        assert.that(chalk.stripColor(stdoutText), is.equalTo(unicode.multiplicationDot + ' foo\n'));
+        assert.that(chalk.stripColor(stdoutText)).is.equalTo(unicode.multiplicationDot + ' foo\n');
         done();
       });
     });
@@ -434,7 +434,7 @@ suite('buntstift', function () {
         buntstift.list('foo', { indent: 1 });
         stop();
       }, function (stdoutText) {
-        assert.that(chalk.stripColor(stdoutText), is.equalTo('  ' + unicode.multiplicationDot + ' foo\n'));
+        assert.that(chalk.stripColor(stdoutText)).is.equalTo('  ' + unicode.multiplicationDot + ' foo\n');
         done();
       });
     });
@@ -444,7 +444,7 @@ suite('buntstift', function () {
         buntstift.list('foo', { indent: 2 });
         stop();
       }, function (stdoutText) {
-        assert.that(chalk.stripColor(stdoutText), is.equalTo('    ' + unicode.multiplicationDot + ' foo\n'));
+        assert.that(chalk.stripColor(stdoutText)).is.equalTo('    ' + unicode.multiplicationDot + ' foo\n');
         done();
       });
     });
@@ -454,7 +454,7 @@ suite('buntstift', function () {
         buntstift.list('foo', { prefix: '--', indent: 1 });
         stop();
       }, function (stdoutText) {
-        assert.that(chalk.stripColor(stdoutText), is.equalTo('   -- foo\n'));
+        assert.that(chalk.stripColor(stdoutText)).is.equalTo('   -- foo\n');
         done();
       });
     });
@@ -462,14 +462,14 @@ suite('buntstift', function () {
 
   suite('table', function () {
     test('is a function.', function (done) {
-      assert.that(buntstift.table, is.ofType('function'));
+      assert.that(buntstift.table).is.ofType('function');
       done();
     });
 
     test('throws an error if now rows are given.', function (done) {
       assert.that(function () {
         buntstift.table();
-      }, is.throwing('Rows are missing.'));
+      }).is.throwing('Rows are missing.');
       done();
     });
 
@@ -480,7 +480,7 @@ suite('buntstift', function () {
         ]);
         stop();
       }, function (stdoutText) {
-        assert.that(chalk.stripColor(stdoutText), is.equalTo('  foo  bar  baz\n'));
+        assert.that(chalk.stripColor(stdoutText)).is.equalTo('  foo  bar  baz\n');
         done();
       });
     });
@@ -493,7 +493,7 @@ suite('buntstift', function () {
         ]);
         stop();
       }, function (stdoutText) {
-        assert.that(chalk.stripColor(stdoutText), is.equalTo('  foo  bar  baz\n  bar  baz  foo\n'));
+        assert.that(chalk.stripColor(stdoutText)).is.equalTo('  foo  bar  baz\n  bar  baz  foo\n');
         done();
       });
     });
@@ -506,7 +506,7 @@ suite('buntstift', function () {
         ]);
         stop();
       }, function (stdoutText) {
-        assert.that(chalk.stripColor(stdoutText), is.equalTo('  fooA  bar  baz \n  bar   baz  fooB\n'));
+        assert.that(chalk.stripColor(stdoutText)).is.equalTo('  fooA  bar  baz \n  bar   baz  fooB\n');
         done();
       });
     });
@@ -521,12 +521,12 @@ suite('buntstift', function () {
         ]);
         stop();
       }, function (stdoutText) {
-        assert.that(chalk.stripColor(stdoutText), is.equalTo([
+        assert.that(chalk.stripColor(stdoutText)).is.equalTo([
           '  A     B    C   \n',
           '  \u2500\u2500\u2500\u2500  \u2500\u2500\u2500  \u2500\u2500\u2500\u2500\n',
           '  fooA  bar  baz \n',
           '  bar   baz  fooB\n'
-        ].join('')));
+        ].join(''));
         done();
       });
     });
@@ -534,14 +534,14 @@ suite('buntstift', function () {
 
   suite('waitFor', function () {
     test('is a function.', function (done) {
-      assert.that(buntstift.waitFor, is.ofType('function'));
+      assert.that(buntstift.waitFor).is.ofType('function');
       done();
     });
 
     test('throws an error if worker is missing.', function (done) {
       assert.that(function () {
         buntstift.waitFor();
-      }, is.throwing('Worker is missing.'));
+      }).is.throwing('Worker is missing.');
       done();
     });
 
@@ -554,8 +554,8 @@ suite('buntstift', function () {
           }, 0.2 * 1000);
         });
       }, function (stdoutText, stderrText) {
-        assert.that(stdoutText, is.equalTo(''));
-        assert.that(stderrText, is.not.equalTo(''));
+        assert.that(stdoutText).is.equalTo('');
+        assert.that(stderrText).is.not.equalTo('');
         done();
       });
     });
@@ -570,17 +570,60 @@ suite('buntstift', function () {
           }, 0.2 * 1000);
         });
       }, function (stdoutText, stderrText) {
-        assert.that(stdoutText, is.equalTo(''));
-        assert.that(stderrText, is.equalTo(''));
+        assert.that(stdoutText).is.equalTo('');
+        assert.that(stderrText).is.equalTo('');
         process.argv.pop();
         done();
       });
     });
   });
 
+  suite('option aliases', function () {
+    suite('-v', function () {
+      setup(function () {
+        process.argv.push('-v');
+      });
+
+      teardown(function () {
+        process.argv.pop();
+      });
+
+      test('is same as --verbose', function (done) {
+        record(function (stop) {
+          buntstift.verbose('foo');
+          stop();
+        }, function (stdoutText) {
+          assert.that(chalk.stripColor(stdoutText)).is.equalTo('  foo\n');
+          done();
+        });
+      });
+    });
+
+    suite('-q', function () {
+      setup(function () {
+        process.argv.push('-q');
+      });
+
+      teardown(function () {
+        process.argv.pop();
+      });
+
+      test('is same as --quiet', function (done) {
+        record(function (stop) {
+          buntstift.info('foo');
+          stop();
+        }, function (stdoutText, stderrText) {
+          assert.that(stdoutText).is.equalTo('');
+          assert.that(stderrText).is.equalTo('');
+          done();
+        });
+      });
+    });
+  });
+
   suite('exit', function () {
     test('is a function.', function (done) {
-      assert.that(buntstift.exit, is.ofType('function'));
+      assert.that(buntstift.exit).is.ofType('function');
       done();
     });
   });
