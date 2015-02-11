@@ -19,15 +19,15 @@
   "main": "lib/buntstift.js",
   "dependencies": {
     "chalk": "0.5.1",
-    "char-spinner": "1.0.1",
-    "markup-js": "1.5.21"
+    "markup-js": "1.5.21",
+    "node-spinner": "0.0.2"
   },
   "devDependencies": {
     "assertthat": "0.4.1",
     "grunt": "0.4.5",
     "isansi": "0.0.2",
     "record-stdstreams": "0.0.3",
-    "tourism": "0.13.1"
+    "tourism": "0.13.2"
   },
   "repository": {
     "type": "git",
