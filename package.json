@@ -23,10 +23,10 @@
     "node-spinner": "0.0.2"
   },
   "devDependencies": {
-    "assertthat": "0.4.1",
+    "assertthat": "0.4.2",
     "grunt": "0.4.5",
     "isansi": "0.0.2",
-    "record-stdstreams": "0.0.3",
+    "record-stdstreams": "0.0.4",
     "tourism": "0.13.2"
   },
   "repository": {

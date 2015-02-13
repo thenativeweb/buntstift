@@ -123,6 +123,16 @@ To shutdown an application, call the `exit` function. Optionally, you may specif
 buntstift.exit();
 ```
 
+## Chaining functions
+
+If you want to run a number of actions as a sequence, you can chain all of buntstift's synchronous functions.
+
+```javascript
+buntstift
+  .error('App failed.')
+  .exit(1);
+```
+
 ## Running the build
 
 This module can be built using [Grunt](http://gruntjs.com/). Besides running the tests, this also analyses the code. To run Grunt, go to the folder where you have installed buntstift and run `grunt`. You need to have [grunt-cli](https://github.com/gruntjs/grunt-cli) installed.

@@ -41,6 +41,11 @@ suite('buntstift', function () {
         done();
       });
     });
+
+    test('returns a reference to buntstift.', function (done) {
+      assert.that(buntstift.newLine()).is.sameAs(buntstift);
+      done();
+    });
   });
 
   suite('success', function () {
@@ -110,6 +115,11 @@ suite('buntstift', function () {
         process.argv.pop();
         done();
       });
+    });
+
+    test('returns a reference to buntstift.', function (done) {
+      assert.that(buntstift.success('foo')).is.sameAs(buntstift);
+      done();
     });
   });
 
@@ -181,6 +191,11 @@ suite('buntstift', function () {
         done();
       });
     });
+
+    test('returns a reference to buntstift.', function (done) {
+      assert.that(buntstift.error('foo')).is.sameAs(buntstift);
+      done();
+    });
   });
 
   suite('warn', function () {
@@ -251,6 +266,11 @@ suite('buntstift', function () {
         done();
       });
     });
+
+    test('returns a reference to buntstift.', function (done) {
+      assert.that(buntstift.warn('foo')).is.sameAs(buntstift);
+      done();
+    });
   });
 
   suite('info', function () {
@@ -320,11 +340,21 @@ suite('buntstift', function () {
         done();
       });
     });
+
+    test('returns a reference to buntstift.', function (done) {
+      assert.that(buntstift.info('foo')).is.sameAs(buntstift);
+      done();
+    });
   });
 
   suite('verbose', function () {
     test('is a function.', function (done) {
       assert.that(buntstift.verbose).is.ofType('function');
+      done();
+    });
+
+    test('returns a reference to buntstift.', function (done) {
+      assert.that(buntstift.verbose('foo')).is.sameAs(buntstift);
       done();
     });
 
@@ -458,6 +488,11 @@ suite('buntstift', function () {
         done();
       });
     });
+
+    test('returns a reference to buntstift.', function (done) {
+      assert.that(buntstift.list('foo')).is.sameAs(buntstift);
+      done();
+    });
   });
 
   suite('table', function () {
@@ -529,6 +564,11 @@ suite('buntstift', function () {
         ].join(''));
         done();
       });
+    });
+
+    test('returns a reference to buntstift.', function (done) {
+      assert.that(buntstift.table([[ 'foo' ]])).is.sameAs(buntstift);
+      done();
     });
   });
 
