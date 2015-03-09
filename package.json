@@ -23,7 +23,7 @@
     "node-spinner": "0.0.4"
   },
   "devDependencies": {
-    "assertthat": "0.5.1",
+    "assertthat": "0.5.3",
     "grunt": "0.4.5",
     "isansi": "0.0.2",
     "record-stdstreams": "0.0.4",
@@ -33,5 +33,8 @@
     "type": "git",
     "url": "git://github.com/thenativeweb/buntstift.git"
   },
+  "keywords": [
+    "cli"
+  ],
   "license": "MIT"
 }
