@@ -27,7 +27,7 @@
     "grunt": "0.4.5",
     "isansi": "0.0.2",
     "record-stdstreams": "0.0.4",
-    "tourism": "0.14.0"
+    "tourism": "0.14.1"
   },
   "repository": {
     "type": "git",

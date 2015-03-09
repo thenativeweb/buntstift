@@ -6,7 +6,7 @@ var assert = require('assertthat'),
     record = require('record-stdstreams');
 
 var buntstift = require('../lib/buntstift'),
-    unicode = require('../lib/unicode');
+    unicode = require('../lib/unicode').utf8;
 
 suite('buntstift', function () {
   test('is an object.', function (done) {
@@ -70,19 +70,19 @@ suite('buntstift', function () {
         buntstift.success('foo');
         stop();
       }, function (stdoutText) {
-        assert.that(chalk.stripColor(stdoutText)).is.equalTo(unicode().checkMark + ' foo\n');
+        assert.that(chalk.stripColor(stdoutText)).is.equalTo(unicode.checkMark + ' foo\n');
         done();
       });
     });
 
     test('writes a message with an ASCII-compatible check mark if --no-utf is set.', function (done) {
-      process.argv.push('--no-utf');
+      buntstift.noUtf();
       record(function (stop) {
         buntstift.success('foo');
         stop();
       }, function (stdoutText) {
         assert.that(chalk.stripColor(stdoutText)).is.equalTo('+ foo\n');
-        process.argv.pop();
+        buntstift.forceUtf();
         done();
       });
     });
@@ -92,7 +92,7 @@ suite('buntstift', function () {
         buntstift.success(23);
         stop();
       }, function (stdoutText) {
-        assert.that(chalk.stripColor(stdoutText)).is.equalTo(unicode().checkMark + ' 23\n');
+        assert.that(chalk.stripColor(stdoutText)).is.equalTo(unicode.checkMark + ' 23\n');
         done();
       });
     });
@@ -102,7 +102,7 @@ suite('buntstift', function () {
         buntstift.success('foo {{bar}}', { bar: 'baz' });
         stop();
       }, function (stdoutText) {
-        assert.that(chalk.stripColor(stdoutText)).is.equalTo(unicode().checkMark + ' foo baz\n');
+        assert.that(chalk.stripColor(stdoutText)).is.equalTo(unicode.checkMark + ' foo baz\n');
         done();
       });
     });
@@ -157,19 +157,19 @@ suite('buntstift', function () {
         buntstift.error('foo');
         stop();
       }, function (stdoutText, stderrText) {
-        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode().crossMark + ' foo\n');
+        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode.crossMark + ' foo\n');
         done();
       });
     });
 
     test('writes a message with an ASCII-compatible cross if --no-utf is set.', function (done) {
-      process.argv.push('--no-utf');
+      buntstift.noUtf();
       record(function (stop) {
         buntstift.error('foo');
         stop();
       }, function (stdoutText, stderrText) {
         assert.that(chalk.stripColor(stderrText)).is.equalTo('! foo\n');
-        process.argv.pop();
+        buntstift.forceUtf();
         done();
       });
     });
@@ -179,7 +179,7 @@ suite('buntstift', function () {
         buntstift.error(23);
         stop();
       }, function (stdoutText, stderrText) {
-        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode().crossMark + ' 23\n');
+        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode.crossMark + ' 23\n');
         done();
       });
     });
@@ -189,7 +189,7 @@ suite('buntstift', function () {
         buntstift.error('foo {{bar}}', { bar: 'baz' });
         stop();
       }, function (stdoutText, stderrText) {
-        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode().crossMark + ' foo baz\n');
+        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode.crossMark + ' foo baz\n');
         done();
       });
     });
@@ -210,7 +210,7 @@ suite('buntstift', function () {
         buntstift.error('foo');
         stop();
       }, function (stdoutText, stderrText) {
-        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode().crossMark + ' foo\n');
+        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode.crossMark + ' foo\n');
         process.argv.pop();
         done();
       });
@@ -244,19 +244,19 @@ suite('buntstift', function () {
         buntstift.warn('foo');
         stop();
       }, function (stdoutText, stderrText) {
-        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode().rightPointingPointer + ' foo\n');
+        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode.rightPointingPointer + ' foo\n');
         done();
       });
     });
 
     test('writes a message with an ASCII-compatible pointer if --no-utf is set.', function (done) {
-      process.argv.push('--no-utf');
+      buntstift.noUtf();
       record(function (stop) {
         buntstift.warn('foo');
         stop();
       }, function (stdoutText, stderrText) {
         assert.that(chalk.stripColor(stderrText)).is.equalTo('? foo\n');
-        process.argv.pop();
+        buntstift.forceUtf();
         done();
       });
     });
@@ -266,7 +266,7 @@ suite('buntstift', function () {
         buntstift.warn(23);
         stop();
       }, function (stdoutText, stderrText) {
-        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode().rightPointingPointer + ' 23\n');
+        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode.rightPointingPointer + ' 23\n');
         done();
       });
     });
@@ -276,7 +276,7 @@ suite('buntstift', function () {
         buntstift.warn('foo {{bar}}', { bar: 'baz' });
         stop();
       }, function (stdoutText, stderrText) {
-        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode().rightPointingPointer + ' foo baz\n');
+        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode.rightPointingPointer + ' foo baz\n');
         done();
       });
     });
@@ -297,7 +297,7 @@ suite('buntstift', function () {
         buntstift.warn('foo');
         stop();
       }, function (stdoutText, stderrText) {
-        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode().rightPointingPointer + ' foo\n');
+        assert.that(chalk.stripColor(stderrText)).is.equalTo(unicode.rightPointingPointer + ' foo\n');
         process.argv.pop();
         done();
       });
@@ -490,19 +490,19 @@ suite('buntstift', function () {
         buntstift.list('foo');
         stop();
       }, function (stdoutText) {
-        assert.that(chalk.stripColor(stdoutText)).is.equalTo(unicode().multiplicationDot + ' foo\n');
+        assert.that(chalk.stripColor(stdoutText)).is.equalTo(unicode.multiplicationDot + ' foo\n');
         done();
       });
     });
 
     test('writes a message with an ASCII-compatible dash if --no-utf is set.', function (done) {
-      process.argv.push('--no-utf');
+      buntstift.noUtf();
       record(function (stop) {
         buntstift.list('foo');
         stop();
       }, function (stdoutText) {
         assert.that(chalk.stripColor(stdoutText)).is.equalTo('- foo\n');
-        process.argv.pop();
+        buntstift.forceUtf();
         done();
       });
     });
@@ -512,7 +512,7 @@ suite('buntstift', function () {
         buntstift.list('foo', { indent: 1 });
         stop();
       }, function (stdoutText) {
-        assert.that(chalk.stripColor(stdoutText)).is.equalTo('  ' + unicode().multiplicationDot + ' foo\n');
+        assert.that(chalk.stripColor(stdoutText)).is.equalTo('  ' + unicode.multiplicationDot + ' foo\n');
         done();
       });
     });
@@ -522,7 +522,7 @@ suite('buntstift', function () {
         buntstift.list('foo', { indent: 2 });
         stop();
       }, function (stdoutText) {
-        assert.that(chalk.stripColor(stdoutText)).is.equalTo('    ' + unicode().multiplicationDot + ' foo\n');
+        assert.that(chalk.stripColor(stdoutText)).is.equalTo('    ' + unicode.multiplicationDot + ' foo\n');
         done();
       });
     });
@@ -615,7 +615,7 @@ suite('buntstift', function () {
     });
 
     test('inserts a separator line with ASCII-compatible dashes if --no-utf is set.', function (done) {
-      process.argv.push('--no-utf');
+      buntstift.noUtf();
       record(function (stop) {
         buntstift.table([
           [ 'A', 'B', 'C' ],
@@ -631,7 +631,7 @@ suite('buntstift', function () {
           '  fooA  bar  baz \n',
           '  bar   baz  fooB\n'
         ].join(''));
-        process.argv.pop();
+        buntstift.forceUtf();
         done();
       });
     });

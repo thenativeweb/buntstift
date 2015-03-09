@@ -100,9 +100,13 @@ If you run a cli application in non-interactive mode, i.e. scripted, using color
 
 In turn, if you want to force disable colors even when in interactive mode, provide the `--no-color` command line switch.
 
+Alternatively, you may use the `forceColor` and `noColor` functions.
+
 ## Disabling UTF characters
 
 If your system does not support UTF characters, disable them using the `--no-utf` command line switch.
+
+Alternatively, you may use the `forceUtf` and `noUtf` functions.
 
 ## Waiting for long-running tasks
 
