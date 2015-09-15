@@ -543,6 +543,51 @@ suite('buntstift', function () {
     });
   });
 
+  suite('line', function () {
+    test('is a function.', function (done) {
+      assert.that(buntstift.line).is.ofType('function');
+      done();
+    });
+
+    test('returns a reference to buntstift.', function (done) {
+      assert.that(buntstift.line()).is.sameAs(buntstift);
+      done();
+    });
+
+    test('writes a line in gray to stdout.', function (done) {
+      record(function (stop) {
+        buntstift.line();
+        stop();
+      }, function (stdoutText) {
+        assert.that(isAnsi.gray(stdoutText)).is.true();
+        done();
+      });
+    });
+
+    test('writes a line to stdout.', function (done) {
+      record(function (stop) {
+        buntstift.line();
+        stop();
+      }, function (stdoutText) {
+        assert.that(chalk.stripColor(stdoutText)).is.equalTo('\u2500'.repeat(process.stdout.columns || 80) + '\n');
+        done();
+      });
+    });
+
+    test('shows nothing when --quiet is set.', function (done) {
+      process.argv.push('--quiet');
+      record(function (stop) {
+        buntstift.line();
+        stop();
+      }, function (stdoutText, stderrText) {
+        assert.that(stdoutText).is.equalTo('');
+        assert.that(stderrText).is.equalTo('');
+        process.argv.pop();
+        done();
+      });
+    });
+  });
+
   suite('table', function () {
     test('is a function.', function (done) {
       assert.that(buntstift.table).is.ofType('function');

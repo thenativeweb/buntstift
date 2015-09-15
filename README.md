@@ -52,6 +52,14 @@ To print a blank line call the `newLine` function.
 buntstift.newLine();
 ```
 
+## Printing lines
+
+To print a line call the `line` function.
+
+```javascript
+buntstift.line();
+```
+
 ## Using lists
 
 To write a list to the console use the `list` function. Optionally, you may specify an indentation level. Setting the indentation level to `0` is equal to omitting it.
