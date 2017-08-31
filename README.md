@@ -6,14 +6,16 @@ buntstift makes the CLI colorful.
 
 ## Installation
 
-    $ npm install buntstift
+```shell
+$ npm install buntstift
+```
 
 ## Quick start
 
 First you need to integrate buntstift into your application.
 
 ```javascript
-var buntstift = require('buntstift');
+const buntstift = require('buntstift');
 ```
 
 To write messages to the console use the `success` and `error` functions to show that your application has succeeded or failed. If you want to provide additional information, use the `info` and `verbose` functions. In case of any warnings, use the `warn` function.
@@ -27,17 +29,7 @@ buntstift.success('Done.');
 
 ### Formatting messages
 
-If you want to use placeholders in the message, embrace them in double curly braces. This way you can access any property of an additional `options` object.
-
-```javascript
-buntstift.info('App {{name}} started.', {
-  name: 'foo'
-});
-```
-
-Please note that you can use as many placeholders as you like.
-
-Besides, you can use the `options` object to change the prefix of the various message writing functions. For that, simply provide a `prefix` property and set it to the desired character.
+You can use the `options` object to change the prefix of the various message writing functions. For that, simply provide a `prefix` property and set it to the desired character.
 
 ```javascript
 buntstift.error('App stopped.', { prefix: 'X' });
@@ -121,7 +113,7 @@ Alternatively, you may use the `forceUtf` and `noUtf` functions.
 If your application performs a long-running task, you may use the `waitFor` function to show a waiting indicator to the user.
 
 ```javascript
-buntstift.waitFor(function (done) {
+buntstift.waitFor(done => {
   // ...
   done();
 });
@@ -151,14 +143,16 @@ buntstift
 
 ## Running the build
 
-This module can be built using [Grunt](http://gruntjs.com/). Besides running the tests, this also analyses the code. To run Grunt, go to the folder where you have installed buntstift and run `grunt`. You need to have [grunt-cli](https://github.com/gruntjs/grunt-cli) installed.
+To build this module use [roboter](https://www.npmjs.com/package/roboter).
 
-    $ grunt
+```bash
+$ bot
+```
 
 ## License
 
 The MIT License (MIT)
-Copyright (c) 2015 the native web.
+Copyright (c) 2015-2017 the native web.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
