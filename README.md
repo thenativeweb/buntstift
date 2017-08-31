@@ -110,13 +110,13 @@ Alternatively, you may use the `forceUtf` and `noUtf` functions.
 
 ## Waiting for long-running tasks
 
-If your application performs a long-running task, you may use the `waitFor` function to show a waiting indicator to the user.
+If your application performs a long-running task, you may use the `wait` function to show a waiting indicator to the user.
 
 ```javascript
-buntstift.waitFor(done => {
-  // ...
-  done();
-});
+const done = buntstift.wait();
+
+// ...
+done();
 ```
 
 *Please note that the loading indicator is written to the application's standard error stream.*

@@ -683,6 +683,47 @@ suite('buntstift', () => {
     });
   });
 
+  suite('wait', () => {
+    test('is a function.', done => {
+      assert.that(buntstift.wait).is.ofType('function');
+      done();
+    });
+
+    test('shows a waiting indicator on stderr.', done => {
+      record(stopRecording => {
+        const stopWaiting = buntstift.wait();
+
+        setTimeout(() => {
+          stopWaiting();
+          stopRecording();
+        }, 0.2 * 1000);
+      }, (err, stdoutText, stderrText) => {
+        assert.that(err).is.null();
+        assert.that(stdoutText).is.equalTo('');
+        assert.that(stderrText).is.not.equalTo('');
+        done();
+      });
+    });
+
+    test('shows nothing when --quiet is set.', done => {
+      process.argv.push('--quiet');
+      record(stopRecording => {
+        const stopWaiting = buntstift.wait();
+
+        setTimeout(() => {
+          stopWaiting();
+          stopRecording();
+        }, 0.2 * 1000);
+      }, (err, stdoutText, stderrText) => {
+        assert.that(err).is.null();
+        assert.that(stdoutText).is.equalTo('');
+        assert.that(stderrText).is.equalTo('');
+        process.argv.pop();
+        done();
+      });
+    });
+  });
+
   suite('waitFor', () => {
     test('is a function.', done => {
       assert.that(buntstift.waitFor).is.ofType('function');
