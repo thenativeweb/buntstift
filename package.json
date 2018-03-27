@@ -16,18 +16,20 @@
       "email": "mail@michael-scherer.net"
     }
   ],
-  "main": "lib/buntstift.js",
+  "main": "dist/buntstift.js",
   "dependencies": {
-    "chalk": "2.1.0",
+    "babel-runtime": "6.26.0",
+    "chalk": "2.3.2",
     "node-spinner": "0.0.4"
   },
   "devDependencies": {
-    "assertthat": "0.10.3",
+    "assertthat": "1.0.0",
     "isansi": "0.0.2",
-    "record-stdstreams": "0.1.0",
-    "roboter": "0.15.4",
-    "roboter-server": "0.15.4",
-    "strip-ansi": "4.0.0"
+    "record-stdstreams": "1.0.0",
+    "roboter": "0.16.0",
+    "roboter-server": "0.16.0",
+    "strip-ansi": "4.0.0",
+    "util.promisify": "1.0.0"
   },
   "repository": {
     "type": "git",
