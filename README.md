@@ -113,10 +113,10 @@ Alternatively, you may use the `forceUtf` and `noUtf` functions.
 If your application performs a long-running task, you may use the `wait` function to show a waiting indicator to the user.
 
 ```javascript
-const done = buntstift.wait();
+const stop = buntstift.wait();
 
 // ...
-done();
+stop();
 ```
 
 *Please note that the loading indicator is written to the application's standard error stream.*
