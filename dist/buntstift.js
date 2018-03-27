@@ -10,6 +10,9 @@ var is = require('./is'),
 
 var unicode = require('./unicode')[is.utf() ? 'utf8' : 'ascii'];
 
+var interval = void 0,
+    _stopSpinner = void 0;
+
 var buntstift = {};
 
 buntstift.forceColor = function () {
@@ -32,70 +35,116 @@ buntstift.noUtf = function () {
   /* eslint-enable global-require */
 };
 
-buntstift.error = function (message, options) {
-  options = options || {};
+buntstift.error = function (message) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-  /* eslint-disable no-console */
+  var spinnerNeedsRestart = false;
+
+  if (_stopSpinner) {
+    _stopSpinner();
+    spinnerNeedsRestart = true;
+  }
+
   console.error(chalk.red.bold(util.format('%s %s', options.prefix || unicode.crossMark, String(message))));
-  /* eslint-enable no-console */
+
+  if (spinnerNeedsRestart) {
+    buntstift.wait();
+  }
 
   return buntstift;
 };
 
-buntstift.warn = function (message, options) {
-  options = options || {};
+buntstift.warn = function (message) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-  /* eslint-disable no-console */
+  var spinnerNeedsRestart = false;
+
+  if (_stopSpinner) {
+    _stopSpinner();
+    spinnerNeedsRestart = true;
+  }
+
   console.error(chalk.yellow.bold(util.format('%s %s', options.prefix || unicode.rightPointingPointer, String(message))));
-  /* eslint-enable no-console */
+
+  if (spinnerNeedsRestart) {
+    buntstift.wait();
+  }
 
   return buntstift;
 };
 
-buntstift.success = function (message, options) {
-  options = options || {};
+buntstift.success = function (message) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
   if (is.quiet()) {
     return buntstift;
   }
 
-  /* eslint-disable no-console */
+  var spinnerNeedsRestart = false;
+
+  if (_stopSpinner) {
+    _stopSpinner();
+    spinnerNeedsRestart = true;
+  }
+
   console.log(chalk.green.bold(util.format('%s %s', options.prefix || unicode.checkMark, String(message))));
-  /* eslint-enable no-console */
+
+  if (spinnerNeedsRestart) {
+    buntstift.wait();
+  }
 
   return buntstift;
 };
 
-buntstift.info = function (message, options) {
-  options = options || {};
+buntstift.info = function (message) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
   if (is.quiet()) {
     return buntstift;
   }
 
-  /* eslint-disable no-console */
+  var spinnerNeedsRestart = false;
+
+  if (_stopSpinner) {
+    _stopSpinner();
+    spinnerNeedsRestart = true;
+  }
+
   console.log(chalk.white(util.format('%s %s', options.prefix || ' ', String(message))));
-  /* eslint-enable no-console */
+
+  if (spinnerNeedsRestart) {
+    buntstift.wait();
+  }
 
   return buntstift;
 };
 
-buntstift.verbose = function (message, options) {
-  options = options || {};
+buntstift.verbose = function (message) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
   if (is.quiet() || !is.verbose()) {
     return buntstift;
   }
 
-  /* eslint-disable no-console */
+  var spinnerNeedsRestart = false;
+
+  if (_stopSpinner) {
+    _stopSpinner();
+    spinnerNeedsRestart = true;
+  }
+
   console.log(chalk.gray(util.format('%s %s', options.prefix || ' ', String(message))));
-  /* eslint-enable no-console */
+
+  if (spinnerNeedsRestart) {
+    buntstift.wait();
+  }
 
   return buntstift;
 };
 
-buntstift.list = function (message, options) {
-  options = options || {};
+buntstift.list = function (message) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
   options.indent = options.indent || 0;
   options.prefix = options.prefix || unicode.multiplicationDot;
 
@@ -109,11 +158,11 @@ buntstift.list = function (message, options) {
 };
 
 buntstift.table = function (rows) {
-  var widths = [];
-
   if (!rows) {
     throw new Error('Rows are missing.');
   }
+
+  var widths = [];
 
   rows.forEach(function (row) {
     row.forEach(function (value, columnIndex) {
@@ -145,9 +194,18 @@ buntstift.line = function () {
     return buntstift;
   }
 
-  /* eslint-disable no-console */
+  var spinnerNeedsRestart = false;
+
+  if (_stopSpinner) {
+    _stopSpinner();
+    spinnerNeedsRestart = true;
+  }
+
   console.log(chalk.gray('\u2500'.repeat(process.stdout.columns || 80)));
-  /* eslint-enable no-console */
+
+  if (spinnerNeedsRestart) {
+    buntstift.wait();
+  }
 
   return buntstift;
 };
@@ -157,9 +215,18 @@ buntstift.newLine = function () {
     return buntstift;
   }
 
-  /* eslint-disable no-console */
+  var spinnerNeedsRestart = false;
+
+  if (_stopSpinner) {
+    _stopSpinner();
+    spinnerNeedsRestart = true;
+  }
+
   console.log();
-  /* eslint-enable no-console */
+
+  if (spinnerNeedsRestart) {
+    buntstift.wait();
+  }
 
   return buntstift;
 };
@@ -171,42 +238,30 @@ buntstift.wait = function () {
     };
   }
 
+  if (_stopSpinner) {
+    return;
+  }
+
   var spinner = new Spinner();
 
-  var interval = setInterval(function () {
+  interval = setInterval(function () {
     process.stderr.write('\r' + spinner.next());
   }, 50);
 
-  return function () {
+  _stopSpinner = function stopSpinner() {
+    _stopSpinner = undefined;
     process.stderr.write('\r');
     clearInterval(interval);
   };
+
+  return _stopSpinner;
 };
 
-buntstift.waitFor = util.deprecate(function (worker) {
-  if (!worker) {
-    throw new Error('Worker is missing.');
-  }
-
-  if (is.quiet()) {
-    return worker(function () {
-      // Intentionally left blank.
-    });
-  }
-
-  var spinner = new Spinner();
-
-  var interval = setInterval(function () {
-    process.stderr.write('\r' + spinner.next());
-  }, 50);
-
-  worker(function () {
-    process.stderr.write('\r');
-    clearInterval(interval);
-  });
-}, 'buntstift.waitFor: Use buntstift.wait instead.');
-
 buntstift.exit = function (code) {
+  if (_stopSpinner) {
+    _stopSpinner();
+  }
+
   /* eslint-disable no-process-exit */
   process.exit(code || 0);
   /* eslint-enable no-process-exit */
