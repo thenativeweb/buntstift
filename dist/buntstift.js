@@ -142,6 +142,31 @@ buntstift.verbose = function (message) {
   return buntstift;
 };
 
+buntstift.passThrough = function (message) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  options.target = options.target || 'stdout';
+
+  if (is.quiet() && options.target === 'stdout') {
+    return buntstift;
+  }
+
+  var spinnerNeedsRestart = false;
+
+  if (_stopSpinner) {
+    _stopSpinner();
+    spinnerNeedsRestart = true;
+  }
+
+  process[options.target].write((options.prefix || ' ') + ' ' + String(message));
+
+  if (spinnerNeedsRestart) {
+    buntstift.wait();
+  }
+
+  return buntstift;
+};
+
 buntstift.list = function (message) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
