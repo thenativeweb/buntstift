@@ -132,6 +132,29 @@ buntstift.verbose = function (message, options = {}) {
   return buntstift;
 };
 
+buntstift.passThrough = function (message, options = {}) {
+  options.target = options.target || 'stdout';
+
+  if (is.quiet() && options.target === 'stdout') {
+    return buntstift;
+  }
+
+  let spinnerNeedsRestart = false;
+
+  if (stopSpinner) {
+    stopSpinner();
+    spinnerNeedsRestart = true;
+  }
+
+  process[options.target].write(`${options.prefix || ' '} ${String(message)}`);
+
+  if (spinnerNeedsRestart) {
+    buntstift.wait();
+  }
+
+  return buntstift;
+};
+
 buntstift.list = function (message, options = {}) {
   options.indent = options.indent || 0;
   options.prefix = options.prefix || unicode.multiplicationDot;

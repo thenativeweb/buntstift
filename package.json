@@ -26,8 +26,7 @@
     "assertthat": "1.0.0",
     "isansi": "0.0.2",
     "record-stdstreams": "1.0.0",
-    "roboter": "0.16.0",
-    "roboter-server": "0.16.0",
+    "roboter": "thenativeweb/roboter#vnext",
     "strip-ansi": "4.0.0",
     "util.promisify": "1.0.0"
   },

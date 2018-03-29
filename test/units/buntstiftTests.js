@@ -6,8 +6,8 @@ const assert = require('assertthat'),
       record = require('record-stdstreams'),
       stripAnsi = require('strip-ansi');
 
-const buntstift = require('../../lib/buntstift'),
-      unicode = require('../../lib/unicode').utf8;
+const buntstift = require('../../src/buntstift'),
+      unicode = require('../../src/unicode').utf8;
 
 const sleep = promisify(setTimeout);
 
@@ -412,6 +412,84 @@ suite('buntstift', () => {
 
         assert.that(stdout).is.equalTo('');
         process.argv.pop();
+      });
+    });
+
+    suite('passThrough', () => {
+      test('is a function.', async () => {
+        assert.that(buntstift.passThrough).is.ofType('function');
+      });
+
+      test('writes a message with indentation.', async () => {
+        const stop = record();
+
+        buntstift.passThrough('foo\n');
+
+        const { stdout } = stop();
+
+        assert.that(stdout).is.equalTo('  foo\n');
+      });
+
+      test('writes a stringified message if necessary.', async () => {
+        const stop = record();
+
+        buntstift.passThrough(23);
+
+        const { stdout } = stop();
+
+        assert.that(stdout).is.equalTo('  23');
+      });
+
+      test('writes to stderr if necessary.', async () => {
+        const stop = record();
+
+        buntstift.passThrough('foo\n', { target: 'stderr' });
+
+        const { stdout, stderr } = stop();
+
+        assert.that(stdout).is.equalTo('');
+        assert.that(stderr).is.equalTo('  foo\n');
+      });
+
+      test('replaces the check mark if a prefix is explicitly given.', async () => {
+        const stop = record();
+
+        buntstift.passThrough('foo\n', { prefix: '-' });
+
+        const { stdout } = stop();
+
+        assert.that(stdout).is.equalTo('- foo\n');
+      });
+
+      test('does nothing when --quiet is set.', async () => {
+        process.argv.push('--quiet');
+
+        const stop = record();
+
+        buntstift.passThrough('foo\n');
+
+        const { stdout } = stop();
+
+        assert.that(stdout).is.equalTo('');
+        process.argv.pop();
+      });
+
+      test('ignores --quiet for stderr.', async () => {
+        process.argv.push('--quiet');
+
+        const stop = record();
+
+        buntstift.passThrough('foo\n', { target: 'stderr' });
+
+        const { stdout, stderr } = stop();
+
+        assert.that(stdout).is.equalTo('');
+        assert.that(stderr).is.equalTo('  foo\n');
+        process.argv.pop();
+      });
+
+      test('returns a reference to buntstift.', async () => {
+        assert.that(buntstift.passThrough('foo')).is.sameAs(buntstift);
       });
     });
 

@@ -27,6 +27,8 @@ buntstift.success('Done.');
 
 *Please note that `error` and `warn` write messages to the standard error stream, all other functions write them to the standard output stream.*
 
+Additionally, there is the `passThrough` function that does not do any formatting.
+
 ### Formatting messages
 
 You can use the `options` object to change the prefix of the various message writing functions. For that, simply provide a `prefix` property and set it to the desired character.
@@ -146,7 +148,7 @@ buntstift
 To build this module use [roboter](https://www.npmjs.com/package/roboter).
 
 ```bash
-$ bot
+$ npx roboter
 ```
 
 ## License
