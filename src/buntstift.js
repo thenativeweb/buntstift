@@ -243,7 +243,7 @@ buntstift.newLine = function () {
 };
 
 buntstift.wait = function () {
-  if (is.quiet()) {
+  if (is.quiet() || !is.interactiveMode()) {
     return function () {
       // Intentionally left blank.
     };

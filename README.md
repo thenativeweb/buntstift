@@ -123,7 +123,7 @@ stop();
 
 *Please note that the loading indicator is written to the application's standard error stream.*
 
-If you run the application using the `--quiet` command line switch, no loading indicator will be shown at all.
+If you run the application using the `--quiet` command line switch, or if you run the application in non-interactive mode, no loading indicator will be shown at all.
 
 ## Shutting down an application
 
@@ -147,7 +147,7 @@ buntstift
 
 To build this module use [roboter](https://www.npmjs.com/package/roboter).
 
-```bash
+```shell
 $ npx roboter
 ```
 

@@ -1,17 +1,21 @@
 'use strict';
 
-const is = {};
+const is = {
+  verbose () {
+    return process.argv.includes('--verbose') || process.argv.includes('-v');
+  },
 
-is.verbose = function () {
-  return process.argv.includes('--verbose') || process.argv.includes('-v');
-};
+  quiet () {
+    return process.argv.includes('--quiet') || process.argv.includes('-q');
+  },
 
-is.quiet = function () {
-  return process.argv.includes('--quiet') || process.argv.includes('-q');
-};
+  utf () {
+    return !process.argv.includes('--no-utf');
+  },
 
-is.utf = function () {
-  return !process.argv.includes('--no-utf');
+  interactiveMode () {
+    return process.stdout.isTTY;
+  }
 };
 
 module.exports = is;

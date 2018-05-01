@@ -718,6 +718,10 @@ suite('buntstift', () => {
     });
 
     test('shows a waiting indicator on stderr.', async () => {
+      const oldIsTTY = process.stdout.isTTY;
+
+      process.stdout.isTTY = true;
+
       const stop = record();
       const stopWaiting = buntstift.wait();
 
@@ -728,6 +732,22 @@ suite('buntstift', () => {
 
       assert.that(stdout).is.equalTo('');
       assert.that(stderr).is.not.equalTo('');
+
+      process.stdout.isTTY = oldIsTTY;
+    });
+
+    test('shows nothing when the application is not in interactive mode.', async () => {
+      const stop = record();
+      const stopWaiting = buntstift.wait();
+
+      await sleep(0.2 * 1000);
+      stopWaiting();
+
+      const { stdout, stderr } = stop();
+
+      assert.that(stdout).is.equalTo('');
+      assert.that(stderr).is.equalTo('');
+      process.argv.pop();
     });
 
     test('shows nothing when --quiet is set.', async () => {
