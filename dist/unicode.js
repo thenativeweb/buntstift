@@ -14,7 +14,7 @@ unicode.ascii = {
   checkMark: '+',
   crossMark: '!',
   multiplicationDot: '-',
-  rightPointingPointer: '?',
+  rightPointingPointer: '>',
   boxDrawingsLightHorizontal: '-'
 };
 

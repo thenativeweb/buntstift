@@ -142,6 +142,18 @@ buntstift.verbose = function (message) {
   return buntstift;
 };
 
+buntstift.header = function (headline) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  options.prefix = options.prefix || unicode.rightPointingPointer;
+
+  buntstift.line();
+  buntstift.info(headline, options);
+  buntstift.line();
+
+  return buntstift;
+};
+
 buntstift.passThrough = function (message) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
