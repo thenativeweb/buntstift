@@ -38,6 +38,16 @@ buntstift.error('App stopped.', { prefix: 'X' });
 // => X App stopped.
 ```
 
+## Printing headers
+
+To print a header call the `header` function.
+
+```javascript
+buntstift.header('Running tests...');
+```
+
+You may change the right pointing character using the `prefix` property in the way described above.
+
 ## Printing blank lines
 
 To print a blank line call the `newLine` function.

@@ -238,7 +238,7 @@ suite('buntstift', () => {
 
       const { stderr } = stop();
 
-      assert.that(stripAnsi(stderr)).is.equalTo('? foo\n');
+      assert.that(stripAnsi(stderr)).is.equalTo('> foo\n');
       buntstift.forceUtf();
     });
 
@@ -415,84 +415,6 @@ suite('buntstift', () => {
       });
     });
 
-    suite('passThrough', () => {
-      test('is a function.', async () => {
-        assert.that(buntstift.passThrough).is.ofType('function');
-      });
-
-      test('writes a message with indentation.', async () => {
-        const stop = record();
-
-        buntstift.passThrough('foo\n');
-
-        const { stdout } = stop();
-
-        assert.that(stdout).is.equalTo('  foo\n');
-      });
-
-      test('writes a stringified message if necessary.', async () => {
-        const stop = record();
-
-        buntstift.passThrough(23);
-
-        const { stdout } = stop();
-
-        assert.that(stdout).is.equalTo('  23');
-      });
-
-      test('writes to stderr if necessary.', async () => {
-        const stop = record();
-
-        buntstift.passThrough('foo\n', { target: 'stderr' });
-
-        const { stdout, stderr } = stop();
-
-        assert.that(stdout).is.equalTo('');
-        assert.that(stderr).is.equalTo('  foo\n');
-      });
-
-      test('replaces the check mark if a prefix is explicitly given.', async () => {
-        const stop = record();
-
-        buntstift.passThrough('foo\n', { prefix: '-' });
-
-        const { stdout } = stop();
-
-        assert.that(stdout).is.equalTo('- foo\n');
-      });
-
-      test('does nothing when --quiet is set.', async () => {
-        process.argv.push('--quiet');
-
-        const stop = record();
-
-        buntstift.passThrough('foo\n');
-
-        const { stdout } = stop();
-
-        assert.that(stdout).is.equalTo('');
-        process.argv.pop();
-      });
-
-      test('ignores --quiet for stderr.', async () => {
-        process.argv.push('--quiet');
-
-        const stop = record();
-
-        buntstift.passThrough('foo\n', { target: 'stderr' });
-
-        const { stdout, stderr } = stop();
-
-        assert.that(stdout).is.equalTo('');
-        assert.that(stderr).is.equalTo('  foo\n');
-        process.argv.pop();
-      });
-
-      test('returns a reference to buntstift.', async () => {
-        assert.that(buntstift.passThrough('foo')).is.sameAs(buntstift);
-      });
-    });
-
     suite('without --verbose set.', () => {
       test('does not write a message to stdout.', async () => {
         const stop = record();
@@ -503,6 +425,150 @@ suite('buntstift', () => {
 
         assert.that(stdout).is.equalTo('');
       });
+    });
+  });
+
+  suite('passThrough', () => {
+    test('is a function.', async () => {
+      assert.that(buntstift.passThrough).is.ofType('function');
+    });
+
+    test('writes a message with indentation.', async () => {
+      const stop = record();
+
+      buntstift.passThrough('foo\n');
+
+      const { stdout } = stop();
+
+      assert.that(stdout).is.equalTo('  foo\n');
+    });
+
+    test('writes a stringified message if necessary.', async () => {
+      const stop = record();
+
+      buntstift.passThrough(23);
+
+      const { stdout } = stop();
+
+      assert.that(stdout).is.equalTo('  23');
+    });
+
+    test('writes to stderr if necessary.', async () => {
+      const stop = record();
+
+      buntstift.passThrough('foo\n', { target: 'stderr' });
+
+      const { stdout, stderr } = stop();
+
+      assert.that(stdout).is.equalTo('');
+      assert.that(stderr).is.equalTo('  foo\n');
+    });
+
+    test('replaces the check mark if a prefix is explicitly given.', async () => {
+      const stop = record();
+
+      buntstift.passThrough('foo\n', { prefix: '-' });
+
+      const { stdout } = stop();
+
+      assert.that(stdout).is.equalTo('- foo\n');
+    });
+
+    test('does nothing when --quiet is set.', async () => {
+      process.argv.push('--quiet');
+
+      const stop = record();
+
+      buntstift.passThrough('foo\n');
+
+      const { stdout } = stop();
+
+      assert.that(stdout).is.equalTo('');
+      process.argv.pop();
+    });
+
+    test('ignores --quiet for stderr.', async () => {
+      process.argv.push('--quiet');
+
+      const stop = record();
+
+      buntstift.passThrough('foo\n', { target: 'stderr' });
+
+      const { stdout, stderr } = stop();
+
+      assert.that(stdout).is.equalTo('');
+      assert.that(stderr).is.equalTo('  foo\n');
+      process.argv.pop();
+    });
+
+    test('returns a reference to buntstift.', async () => {
+      assert.that(buntstift.passThrough('foo')).is.sameAs(buntstift);
+    });
+  });
+
+  suite('header', () => {
+    test('is a function.', async () => {
+      assert.that(buntstift.header).is.ofType('function');
+    });
+
+    test('writes a headline with a right pointing arrow.', async () => {
+      const stop = record();
+
+      buntstift.header('foo');
+
+      const { stdout } = stop();
+
+      assert.that(stripAnsi(stdout)).is.equalTo(`${'\u2500'.repeat(process.stdout.columns || 80)}\n${unicode.rightPointingPointer} foo\n${'\u2500'.repeat(process.stdout.columns || 80)}\n`);
+    });
+
+    test('writes a headline with an ASCII-compatible right pointing arrow if --no-utf is set.', async () => {
+      buntstift.noUtf();
+
+      const stop = record();
+
+      buntstift.header('foo');
+
+      const { stdout } = stop();
+
+      assert.that(stripAnsi(stdout)).is.equalTo(`${'\u2500'.repeat(process.stdout.columns || 80)}\n> foo\n${'\u2500'.repeat(process.stdout.columns || 80)}\n`);
+      buntstift.forceUtf();
+    });
+
+    test('writes a stringified headline if necessary.', async () => {
+      const stop = record();
+
+      buntstift.header(23);
+
+      const { stdout } = stop();
+
+      assert.that(stripAnsi(stdout)).is.equalTo(`${'\u2500'.repeat(process.stdout.columns || 80)}\n${unicode.rightPointingPointer} 23\n${'\u2500'.repeat(process.stdout.columns || 80)}\n`);
+    });
+
+    test('replaces the right pointing pointer if a prefix is explicitly given.', async () => {
+      const stop = record();
+
+      buntstift.header('foo', { prefix: '-' });
+
+      const { stdout } = stop();
+
+      assert.that(stripAnsi(stdout)).is.equalTo(`${'\u2500'.repeat(process.stdout.columns || 80)}\n- foo\n${'\u2500'.repeat(process.stdout.columns || 80)}\n`);
+    });
+
+    test('does nothing when --quiet is set.', async () => {
+      process.argv.push('--quiet');
+
+      const stop = record();
+
+      buntstift.header('foo');
+
+      const { stdout } = stop();
+
+      assert.that(stdout).is.equalTo('');
+      process.argv.pop();
+    });
+
+    test('returns a reference to buntstift.', async () => {
+      assert.that(buntstift.header('foo')).is.sameAs(buntstift);
     });
   });
 

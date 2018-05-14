@@ -132,6 +132,16 @@ buntstift.verbose = function (message, options = {}) {
   return buntstift;
 };
 
+buntstift.header = function (headline, options = {}) {
+  options.prefix = options.prefix || unicode.rightPointingPointer;
+
+  buntstift.line();
+  buntstift.info(headline, options);
+  buntstift.line();
+
+  return buntstift;
+};
+
 buntstift.passThrough = function (message, options = {}) {
   options.target = options.target || 'stdout';
 
