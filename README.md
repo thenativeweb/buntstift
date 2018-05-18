@@ -148,9 +148,9 @@ buntstift.exit();
 If you want to run a number of actions as a sequence, you can chain all of buntstift's synchronous functions.
 
 ```javascript
-buntstift
-  .error('App failed.')
-  .exit(1);
+buntstift.
+  error('App failed.').
+  exit(1);
 ```
 
 ## Running the build
