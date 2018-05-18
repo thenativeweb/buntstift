@@ -135,6 +135,50 @@ stop();
 
 If you run the application using the `--quiet` command line switch, or if you run the application in non-interactive mode, no loading indicator will be shown at all.
 
+## Getting user input
+
+Besides the various ways to display information, buntstift is also able to get input from the user. For that, use the `ask`, `confirm` and `select` functions.
+
+### Asking a question
+
+If you want to ask a question to the user, use the `ask` function and provide a `question`:
+
+```javascript
+const answer = await buntstift.ask('What do you want to do today?');
+```
+
+Optionally, you may specify a regular expression to match the answer against:
+
+```javascript
+const answer = await buntstift.ask('What do you want to do today?', /.+/g);
+```
+
+### Getting a confirmation
+
+If you want to get a conformation from the user, use the `confirm` function and provide a `question`:
+
+```javascript
+const isSure = await buntstift.confirm('Are you sure?');
+```
+
+Unless specified otherwise, the default answer is `true`. To change this, provide `false` as second parameter:
+
+```javascript
+const isSure = await buntstift.confirm('Are you sure?', false);
+```
+
+### Selecting from a list
+
+If you want the user to select a value from a list, use the `select` function and provide a `question` as well as a selection of choices:
+
+```javascript
+const favoriteColor = await buntstift.select('What is your favorite color?', [
+  'red',
+  'green',
+  'blue'
+]);
+```
+
 ## Shutting down an application
 
 To shutdown an application, call the `exit` function. Optionally, you may specify an exit code; if you don't, `0` is used.

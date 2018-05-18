@@ -876,6 +876,48 @@ suite('buntstift', () => {
     });
   });
 
+  suite('ask', () => {
+    test('is a function.', async () => {
+      assert.that(buntstift.ask).is.ofType('function');
+    });
+
+    test('throws an error if question is missing.', async () => {
+      await assert.that(async () => {
+        await buntstift.ask();
+      }).is.throwingAsync('Question is missing.');
+    });
+  });
+
+  suite('confirm', () => {
+    test('is a function.', async () => {
+      assert.that(buntstift.confirm).is.ofType('function');
+    });
+
+    test('throws an error if message is missing.', async () => {
+      await assert.that(async () => {
+        await buntstift.confirm();
+      }).is.throwingAsync('Message is missing.');
+    });
+  });
+
+  suite('select', () => {
+    test('is a function.', async () => {
+      assert.that(buntstift.select).is.ofType('function');
+    });
+
+    test('throws an error if question is missing.', async () => {
+      await assert.that(async () => {
+        await buntstift.select();
+      }).is.throwingAsync('Question is missing.');
+    });
+
+    test('throws an error if choices are missing.', async () => {
+      await assert.that(async () => {
+        await buntstift.select('What do you want to do?');
+      }).is.throwingAsync('Choices are missing.');
+    });
+  });
+
   suite('exit', () => {
     test('is a function.', async () => {
       assert.that(buntstift.exit).is.ofType('function');

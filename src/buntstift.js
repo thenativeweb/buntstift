@@ -1,6 +1,7 @@
 'use strict';
 
 const chalk = require('chalk'),
+      inquirer = require('inquirer'),
       Spinner = require('node-spinner');
 
 const is = require('./is'),
@@ -23,6 +24,27 @@ const decorators = {
       }
 
       const result = fn(...args);
+
+      if (spinnerNeedsRestart) {
+        /* eslint-disable no-use-before-define */
+        buntstift.wait();
+        /* eslint-enable no-use-before-define */
+      }
+
+      return result;
+    };
+  },
+
+  pauseSpinnerAsync (fn) {
+    return async function (...args) {
+      let spinnerNeedsRestart = false;
+
+      if (stopSpinner) {
+        stopSpinner();
+        spinnerNeedsRestart = true;
+      }
+
+      const result = await fn(...args);
 
       if (spinnerNeedsRestart) {
         /* eslint-disable no-use-before-define */
@@ -223,6 +245,72 @@ const buntstift = {
 
     return stopSpinner;
   },
+
+  ask: decorators.pauseSpinnerAsync(
+    async (question, regex) => {
+      if (!question) {
+        throw new Error('Question is missing.');
+      }
+
+      const { answer } = await inquirer.prompt([
+        {
+          type: 'input',
+          name: 'answer',
+          message: question,
+          validate (value) {
+            if (regex && !regex.test(value)) {
+              return 'Malformed input, please retry.';
+            }
+
+            return true;
+          }
+        }
+      ]);
+
+      return answer;
+    }
+  ),
+
+  confirm: decorators.pauseSpinnerAsync(
+    async (message, value = true) => {
+      if (!message) {
+        throw new Error('Message is missing.');
+      }
+
+      const { isConfirmed } = await inquirer.prompt([
+        {
+          type: 'confirm',
+          name: 'isConfirmed',
+          message,
+          default: value
+        }
+      ]);
+
+      return isConfirmed;
+    }
+  ),
+
+  select: decorators.pauseSpinnerAsync(
+    async (question, choices) => {
+      if (!question) {
+        throw new Error('Question is missing.');
+      }
+      if (!choices) {
+        throw new Error('Choices are missing.');
+      }
+
+      const { selection } = await inquirer.prompt([
+        {
+          type: 'list',
+          name: 'selection',
+          message: question,
+          choices
+        }
+      ]);
+
+      return selection;
+    }
+  ),
 
   exit (code = 0) {
     if (stopSpinner) {
