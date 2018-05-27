@@ -294,8 +294,10 @@ var buntstift = {
 
 
   ask: decorators.pauseSpinnerAsync(function () {
-    var _ref10 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(question, regex) {
-      var _ref11, answer;
+    var _ref10 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(question) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      var defaultValue, mask, _ref11, answer;
 
       return _regenerator2.default.wrap(function _callee2$(_context2) {
         while (1) {
@@ -309,13 +311,28 @@ var buntstift = {
               throw new Error('Question is missing.');
 
             case 2:
-              _context2.next = 4;
+              defaultValue = void 0, mask = void 0;
+
+
+              if (options instanceof RegExp) {
+                defaultValue = undefined;
+                mask = options;
+              } else if (typeof options === 'string') {
+                defaultValue = options;
+                mask = undefined;
+              } else {
+                defaultValue = options.default;
+                mask = options.mask;
+              }
+
+              _context2.next = 6;
               return inquirer.prompt([{
                 type: 'input',
                 name: 'answer',
                 message: question,
+                default: defaultValue,
                 validate: function validate(value) {
-                  if (regex && !regex.test(value)) {
+                  if (mask && !mask.test(value)) {
                     return 'Malformed input, please retry.';
                   }
 
@@ -323,12 +340,12 @@ var buntstift = {
                 }
               }]);
 
-            case 4:
+            case 6:
               _ref11 = _context2.sent;
               answer = _ref11.answer;
               return _context2.abrupt('return', answer);
 
-            case 7:
+            case 9:
             case 'end':
               return _context2.stop();
           }
@@ -336,7 +353,7 @@ var buntstift = {
       }, _callee2, undefined);
     }));
 
-    return function (_x9, _x10) {
+    return function (_x10) {
       return _ref10.apply(this, arguments);
     };
   }()),
