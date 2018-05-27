@@ -147,10 +147,25 @@ If you want to ask a question to the user, use the `ask` function and provide a 
 const answer = await buntstift.ask('What do you want to do today?');
 ```
 
-Optionally, you may specify a regular expression to match the answer against:
+Optionally, you may specify a regular expression to use as a mask to match the answer against:
 
 ```javascript
 const answer = await buntstift.ask('What do you want to do today?', /.+/g);
+```
+
+Alternatively, you may specify a default value for the answer:
+
+```javascript
+const answer = await buntstift.ask('What do you want to do today?', 'coding');
+```
+
+If you want to provide both, i.e. a mask and a default value, provide an options object:
+
+```javascript
+const answer = await buntstift.ask('What do you want to do today?', {
+  mask: /.+/g,
+  default: 'coding'
+});
 ```
 
 ### Getting a confirmation

@@ -247,9 +247,23 @@ const buntstift = {
   },
 
   ask: decorators.pauseSpinnerAsync(
-    async (question, regex) => {
+    async (question, options = {}) => {
       if (!question) {
         throw new Error('Question is missing.');
+      }
+
+      let defaultValue,
+          mask;
+
+      if (options instanceof RegExp) {
+        defaultValue = undefined;
+        mask = options;
+      } else if (typeof options === 'string') {
+        defaultValue = options;
+        mask = undefined;
+      } else {
+        defaultValue = options.default;
+        mask = options.mask;
       }
 
       const { answer } = await inquirer.prompt([
@@ -257,8 +271,9 @@ const buntstift = {
           type: 'input',
           name: 'answer',
           message: question,
+          default: defaultValue,
           validate (value) {
-            if (regex && !regex.test(value)) {
+            if (mask && !mask.test(value)) {
               return 'Malformed input, please retry.';
             }
 
