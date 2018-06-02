@@ -239,7 +239,7 @@ const buntstift = {
 
     stopSpinner = function () {
       stopSpinner = undefined;
-      process.stderr.write('\r');
+      process.stderr.write('\r \r');
       clearInterval(interval);
     };
 
