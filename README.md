@@ -25,7 +25,7 @@ buntstift.info('Updating...')
 buntstift.success('Done.');
 ```
 
-*Please note that `error` and `warn` write messages to the standard error stream, all other functions write them to the standard output stream.*
+_Please note that `error` and `warn` write messages to the standard error stream, all other functions write them to the standard output stream._
 
 Additionally, there is the `passThrough` function that does not do any formatting.
 
@@ -131,7 +131,7 @@ const stop = buntstift.wait();
 stop();
 ```
 
-*Please note that the loading indicator is written to the application's standard error stream.*
+_Please note that the loading indicator is written to the application's standard error stream._
 
 If you run the application using the `--quiet` command line switch, or if you run the application in non-interactive mode, no loading indicator will be shown at all.
 
