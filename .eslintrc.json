@@ -1,5 +1,5 @@
 {
-  "extends": "eslint-config-es/2015/server",
+  "extends": "es/node",
   "rules": {
     "no-console": 0
   }

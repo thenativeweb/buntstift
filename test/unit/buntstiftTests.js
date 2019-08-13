@@ -1,13 +1,14 @@
 'use strict';
 
+const { promisify } = require('util');
+
 const assert = require('assertthat'),
       isAnsi = require('isansi'),
-      promisify = require('util.promisify'),
       record = require('record-stdstreams'),
       stripAnsi = require('strip-ansi');
 
-const buntstift = require('../../src/buntstift'),
-      unicode = require('../../src/unicode').utf8;
+const buntstift = require('../../lib/buntstift'),
+      unicode = require('../../lib/unicode').utf8;
 
 const sleep = promisify(setTimeout);
 
@@ -352,7 +353,7 @@ suite('buntstift', () => {
       assert.that(buntstift.verbose('foo')).is.sameAs(buntstift);
     });
 
-    suite('with --verbose set.', () => {
+    suite('with --verbose set', () => {
       setup(() => {
         process.argv.push('--verbose');
       });
@@ -415,7 +416,7 @@ suite('buntstift', () => {
       });
     });
 
-    suite('without --verbose set.', () => {
+    suite('without --verbose set', () => {
       test('does not write a message to stdout.', async () => {
         const stop = record();
 
@@ -843,7 +844,7 @@ suite('buntstift', () => {
         process.argv.pop();
       });
 
-      test('is same as --verbose', async () => {
+      test('is same as --verbose.', async () => {
         const stop = record();
 
         buntstift.verbose('foo');
@@ -863,7 +864,7 @@ suite('buntstift', () => {
         process.argv.pop();
       });
 
-      test('is same as --quiet', async () => {
+      test('is same as --quiet.', async () => {
         const stop = record();
 
         buntstift.info('foo');

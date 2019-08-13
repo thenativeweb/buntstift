@@ -2,7 +2,7 @@
 
 const assert = require('assertthat');
 
-const pad = require('../../src/pad');
+const pad = require('../../lib/pad');
 
 suite('pad', () => {
   test('is a function.', async () => {
