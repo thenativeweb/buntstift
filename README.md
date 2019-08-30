@@ -15,7 +15,13 @@ $ npm install buntstift
 First you need to integrate buntstift into your application.
 
 ```javascript
-const buntstift = require('buntstift');
+const buntstift = require('buntstift').default;
+```
+
+If you use TypeScript, use the following code instead:
+
+```typescript
+import buntstift from 'buntstift';
 ```
 
 To write messages to the console use the `success` and `error` functions to show that your application has succeeded or failed. If you want to provide additional information, use the `info` and `verbose` functions. In case of any warnings, use the `warn` function.

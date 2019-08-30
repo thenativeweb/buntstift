@@ -14,19 +14,25 @@
     {
       "name": "Michael Scherer",
       "email": "mail@michael-scherer.net"
+    },
+    {
+      "name": "Hannes Leutloff",
+      "email": "hannes.leutloff@thenativeweb.io"
     }
   ],
-  "main": "lib/buntstift.js",
+  "main": "build/lib/buntstift.js",
+  "types": "build/lib/buntstift.d.ts",
   "dependencies": {
     "chalk": "2.4.2",
-    "inquirer": "6.5.1",
+    "inquirer": "7.0.0",
     "node-spinner": "0.0.4"
   },
   "devDependencies": {
-    "assertthat": "3.2.0",
-    "isansi": "0.0.2",
-    "record-stdstreams": "1.1.1",
-    "roboter": "6.1.0",
+    "@types/inquirer": "6.5.0",
+    "assertthat": "4.0.1",
+    "isansi": "1.0.0",
+    "record-stdstreams": "2.0.1",
+    "roboter": "7.1.1",
     "strip-ansi": "5.2.0"
   },
   "repository": {

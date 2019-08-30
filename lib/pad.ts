@@ -1,6 +1,4 @@
-'use strict';
-
-const pad = function (value, width) {
+const pad = function (value: any, width: number): string {
   let valueAsString = String(value);
 
   const valueType = typeof value;
@@ -18,4 +16,4 @@ const pad = function (value, width) {
   return valueAsString + spaces;
 };
 
-module.exports = pad;
+export default pad;
