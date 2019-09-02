@@ -1,16 +1,3 @@
-<<<<<<< HEAD:test/unit/buntstiftTests.js
-'use strict';
-
-const { promisify } = require('util');
-
-const assert = require('assertthat'),
-      isAnsi = require('isansi'),
-      record = require('record-stdstreams'),
-      stripAnsi = require('strip-ansi');
-
-const buntstift = require('../../lib/buntstift'),
-      unicode = require('../../lib/unicode').utf8;
-=======
 import assert from 'assertthat';
 import buntstift from '../../lib/buntstift';
 import isAnsi from 'isansi';
@@ -18,7 +5,6 @@ import { promisify } from 'util';
 import record from 'record-stdstreams';
 import stripAnsi from 'strip-ansi';
 import { utf8 as unicode } from '../../lib/unicode';
->>>>>>> Migrate to TypeScript.:test/units/buntstiftTests.ts
 
 const sleep = promisify(setTimeout);
 
@@ -339,13 +325,8 @@ suite('buntstift', (): void => {
       assert.that(buntstift.verbose('foo')).is.sameAs(buntstift);
     });
 
-<<<<<<< HEAD:test/unit/buntstiftTests.js
-    suite('with --verbose set', () => {
-      setup(() => {
-=======
     suite('with --verbose set', (): void => {
       setup((): void => {
->>>>>>> Migrate to TypeScript.:test/units/buntstiftTests.ts
         process.argv.push('--verbose');
       });
 
@@ -407,13 +388,8 @@ suite('buntstift', (): void => {
       });
     });
 
-<<<<<<< HEAD:test/unit/buntstiftTests.js
-    suite('without --verbose set', () => {
-      test('does not write a message to stdout.', async () => {
-=======
     suite('without --verbose set', (): void => {
       test('does not write a message to stdout.', async (): Promise<void> => {
->>>>>>> Migrate to TypeScript.:test/units/buntstiftTests.ts
         const stop = record();
 
         buntstift.verbose('foo');
@@ -810,11 +786,7 @@ suite('buntstift', (): void => {
         process.argv.pop();
       });
 
-<<<<<<< HEAD:test/unit/buntstiftTests.js
-      test('is same as --verbose.', async () => {
-=======
       test('is same as --verbose.', async (): Promise<void> => {
->>>>>>> Migrate to TypeScript.:test/units/buntstiftTests.ts
         const stop = record();
 
         buntstift.verbose('foo');
@@ -834,11 +806,7 @@ suite('buntstift', (): void => {
         process.argv.pop();
       });
 
-<<<<<<< HEAD:test/unit/buntstiftTests.js
-      test('is same as --quiet.', async () => {
-=======
       test('is same as --quiet.', async (): Promise<void> => {
->>>>>>> Migrate to TypeScript.:test/units/buntstiftTests.ts
         const stop = record();
 
         buntstift.info('foo');

@@ -1,17 +1,8 @@
 import assert from 'assertthat';
 import pad from '../../lib/pad';
 
-<<<<<<< HEAD:test/unit/padTests.js
-const assert = require('assertthat');
-
-const pad = require('../../lib/pad');
-
-suite('pad', () => {
-  test('is a function.', async () => {
-=======
 suite('pad', (): void => {
   test('is a function.', async (): Promise<void> => {
->>>>>>> Migrate to TypeScript.:test/units/padTests.ts
     assert.that(pad).is.ofType('function');
   });
 
