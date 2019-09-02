@@ -1,21 +1,19 @@
-'use strict';
-
 const is = {
-  verbose () {
+  verbose (): boolean {
     return process.argv.includes('--verbose') || process.argv.includes('-v');
   },
 
-  quiet () {
+  quiet (): boolean {
     return process.argv.includes('--quiet') || process.argv.includes('-q');
   },
 
-  utf () {
+  utf (): boolean {
     return !process.argv.includes('--no-utf');
   },
 
-  interactiveMode () {
-    return process.stdout.isTTY;
+  interactiveMode (): boolean {
+    return Boolean(process.stdout.isTTY);
   }
 };
 
-module.exports = is;
+export default is;
