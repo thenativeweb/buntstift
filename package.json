@@ -31,7 +31,7 @@
     "@types/inquirer": "6.5.0",
     "assertthat": "4.0.2",
     "isansi": "1.0.0",
-    "record-stdstreams": "2.0.1",
+    "record-stdstreams": "2.0.2",
     "roboter": "7.1.5",
     "strip-ansi": "5.2.0"
   },
