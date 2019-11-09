@@ -109,11 +109,11 @@ interface Buntstift {
 
 const buntstift: Buntstift = {
   forceColor (): void {
-    chalk.enabled = true;
+    chalk.level = 3;
   },
 
   noColor (): void {
-    chalk.enabled = false;
+    chalk.level = 0;
   },
 
   forceUtf (): void {
