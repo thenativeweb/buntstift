@@ -16,4 +16,4 @@ const pad = function (value: any, width: number): string {
   return valueAsString + spaces;
 };
 
-export default pad;
+export { pad };

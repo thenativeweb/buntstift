@@ -16,4 +16,4 @@ const is = {
   }
 };
 
-export default is;
+export { is };

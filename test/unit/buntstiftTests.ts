@@ -1,10 +1,10 @@
-import assert from 'assertthat';
-import buntstift from '../../lib/buntstift';
-import isAnsi from 'isansi';
+import { assert } from 'assertthat';
+import { buntstift } from '../../lib/buntstift';
+import { isAnsi } from 'isansi';
 import { promisify } from 'util';
-import record from 'record-stdstreams';
+import { record } from 'record-stdstreams';
 import stripAnsi from 'strip-ansi';
-import { utf8 as unicode } from '../../lib/unicode';
+import { unicode } from '../../lib/unicode';
 
 const sleep = promisify(setTimeout);
 
@@ -61,7 +61,7 @@ suite('buntstift', (): void => {
 
       const { stdout } = stop();
 
-      assert.that(stripAnsi(stdout)).is.equalTo(`${unicode.checkMark} foo\n`);
+      assert.that(stripAnsi(stdout)).is.equalTo(`${unicode.utf8.checkMark} foo\n`);
     });
 
     test('writes a message with an ASCII-compatible check mark if --no-utf is set.', async (): Promise<void> => {
@@ -84,7 +84,7 @@ suite('buntstift', (): void => {
 
       const { stdout } = stop();
 
-      assert.that(stripAnsi(stdout)).is.equalTo(`${unicode.checkMark} 23\n`);
+      assert.that(stripAnsi(stdout)).is.equalTo(`${unicode.utf8.checkMark} 23\n`);
     });
 
     test('replaces the check mark if a prefix is explicitly given.', async (): Promise<void> => {
@@ -134,7 +134,7 @@ suite('buntstift', (): void => {
 
       const { stderr } = stop();
 
-      assert.that(stripAnsi(stderr)).is.equalTo(`${unicode.crossMark} foo\n`);
+      assert.that(stripAnsi(stderr)).is.equalTo(`${unicode.utf8.crossMark} foo\n`);
     });
 
     test('writes a message with an ASCII-compatible cross if --no-utf is set.', async (): Promise<void> => {
@@ -157,7 +157,7 @@ suite('buntstift', (): void => {
 
       const { stderr } = stop();
 
-      assert.that(stripAnsi(stderr)).is.equalTo(`${unicode.crossMark} 23\n`);
+      assert.that(stripAnsi(stderr)).is.equalTo(`${unicode.utf8.crossMark} 23\n`);
     });
 
     test('replaces the check mark if a prefix is explicitly given.', async (): Promise<void> => {
@@ -179,7 +179,7 @@ suite('buntstift', (): void => {
 
       const { stderr } = stop();
 
-      assert.that(stripAnsi(stderr)).is.equalTo(`${unicode.crossMark} foo\n`);
+      assert.that(stripAnsi(stderr)).is.equalTo(`${unicode.utf8.crossMark} foo\n`);
       process.argv.pop();
     });
 
@@ -207,7 +207,7 @@ suite('buntstift', (): void => {
 
       const { stderr } = stop();
 
-      assert.that(stripAnsi(stderr)).is.equalTo(`${unicode.rightPointingPointer} foo\n`);
+      assert.that(stripAnsi(stderr)).is.equalTo(`${unicode.utf8.rightPointingPointer} foo\n`);
     });
 
     test('writes a message with an ASCII-compatible pointer if --no-utf is set.', async (): Promise<void> => {
@@ -230,7 +230,7 @@ suite('buntstift', (): void => {
 
       const { stderr } = stop();
 
-      assert.that(stripAnsi(stderr)).is.equalTo(`${unicode.rightPointingPointer} 23\n`);
+      assert.that(stripAnsi(stderr)).is.equalTo(`${unicode.utf8.rightPointingPointer} 23\n`);
     });
 
     test('replaces the check mark if a prefix is explicitly given.', async (): Promise<void> => {
@@ -252,7 +252,7 @@ suite('buntstift', (): void => {
 
       const { stderr } = stop();
 
-      assert.that(stripAnsi(stderr)).is.equalTo(`${unicode.rightPointingPointer} foo\n`);
+      assert.that(stripAnsi(stderr)).is.equalTo(`${unicode.utf8.rightPointingPointer} foo\n`);
       process.argv.pop();
     });
 
@@ -483,7 +483,7 @@ suite('buntstift', (): void => {
 
       const { stdout } = stop();
 
-      assert.that(stripAnsi(stdout)).is.equalTo(`${'\u2500'.repeat(process.stdout.columns || 80)}\n${unicode.rightPointingPointer} foo\n${'\u2500'.repeat(process.stdout.columns || 80)}\n`);
+      assert.that(stripAnsi(stdout)).is.equalTo(`${'\u2500'.repeat(process.stdout.columns || 80)}\n${unicode.utf8.rightPointingPointer} foo\n${'\u2500'.repeat(process.stdout.columns || 80)}\n`);
     });
 
     test('writes a headline with an ASCII-compatible right pointing arrow if --no-utf is set.', async (): Promise<void> => {
@@ -506,7 +506,7 @@ suite('buntstift', (): void => {
 
       const { stdout } = stop();
 
-      assert.that(stripAnsi(stdout)).is.equalTo(`${'\u2500'.repeat(process.stdout.columns || 80)}\n${unicode.rightPointingPointer} 23\n${'\u2500'.repeat(process.stdout.columns || 80)}\n`);
+      assert.that(stripAnsi(stdout)).is.equalTo(`${'\u2500'.repeat(process.stdout.columns || 80)}\n${unicode.utf8.rightPointingPointer} 23\n${'\u2500'.repeat(process.stdout.columns || 80)}\n`);
     });
 
     test('replaces the right pointing pointer if a prefix is explicitly given.', async (): Promise<void> => {
@@ -545,7 +545,7 @@ suite('buntstift', (): void => {
 
       const { stdout } = stop();
 
-      assert.that(stripAnsi(stdout)).is.equalTo(`${unicode.multiplicationDot} foo\n`);
+      assert.that(stripAnsi(stdout)).is.equalTo(`${unicode.utf8.multiplicationDot} foo\n`);
     });
 
     test('writes a message with an ASCII-compatible dash if --no-utf is set.', async (): Promise<void> => {
@@ -568,7 +568,7 @@ suite('buntstift', (): void => {
 
       const { stdout } = stop();
 
-      assert.that(stripAnsi(stdout)).is.equalTo(`  ${unicode.multiplicationDot} foo\n`);
+      assert.that(stripAnsi(stdout)).is.equalTo(`  ${unicode.utf8.multiplicationDot} foo\n`);
     });
 
     test('writes an indented message with level 2.', async (): Promise<void> => {
@@ -578,7 +578,7 @@ suite('buntstift', (): void => {
 
       const { stdout } = stop();
 
-      assert.that(stripAnsi(stdout)).is.equalTo(`    ${unicode.multiplicationDot} foo\n`);
+      assert.that(stripAnsi(stdout)).is.equalTo(`    ${unicode.utf8.multiplicationDot} foo\n`);
     });
 
     test('correctly indents even for multiple prefix characters.', async (): Promise<void> => {

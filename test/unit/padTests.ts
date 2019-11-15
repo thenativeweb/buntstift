@@ -1,5 +1,5 @@
-import assert from 'assertthat';
-import pad from '../../lib/pad';
+import { assert } from 'assertthat';
+import { pad } from '../../lib/pad';
 
 suite('pad', (): void => {
   test('is a function.', async (): Promise<void> => {

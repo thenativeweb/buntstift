@@ -1,9 +1,9 @@
 import chalk from 'chalk';
 import inquirer from 'inquirer';
-import is from './is';
-import pad from './pad';
+import { is } from './is';
+import { pad } from './pad';
 import Spinner from 'node-spinner';
-import unicode from './unicode';
+import { unicode } from './unicode';
 
 let characters = unicode[is.utf() ? 'utf8' : 'ascii'];
 
@@ -345,4 +345,4 @@ const buntstift: Buntstift = {
   }
 };
 
-export default buntstift;
+export { buntstift };

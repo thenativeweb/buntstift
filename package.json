@@ -29,9 +29,9 @@
   },
   "devDependencies": {
     "@types/inquirer": "6.5.0",
-    "assertthat": "4.0.2",
-    "isansi": "1.0.1",
-    "record-stdstreams": "2.1.0",
+    "assertthat": "5.0.1",
+    "isansi": "2.0.0",
+    "record-stdstreams": "3.0.0",
     "roboter": "9.2.0",
     "strip-ansi": "6.0.0"
   },
