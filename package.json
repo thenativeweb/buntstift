@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@types/inquirer": "6.5.0",
-    "assertthat": "5.0.1",
+    "assertthat": "5.0.2",
     "isansi": "2.0.0",
     "record-stdstreams": "3.0.0",
     "roboter": "9.2.0",
