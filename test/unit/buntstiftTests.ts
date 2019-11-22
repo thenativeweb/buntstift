@@ -326,11 +326,11 @@ suite('buntstift', (): void => {
     });
 
     suite('with --verbose set', (): void => {
-      setup((): void => {
+      setup(async (): Promise<void> => {
         process.argv.push('--verbose');
       });
 
-      teardown((): void => {
+      teardown(async (): Promise<void> => {
         process.argv.pop();
       });
 
@@ -778,11 +778,11 @@ suite('buntstift', (): void => {
 
   suite('option aliases', (): void => {
     suite('-v', (): void => {
-      setup((): void => {
+      setup(async (): Promise<void> => {
         process.argv.push('-v');
       });
 
-      teardown((): void => {
+      teardown(async (): Promise<void> => {
         process.argv.pop();
       });
 
@@ -798,11 +798,11 @@ suite('buntstift', (): void => {
     });
 
     suite('-q', (): void => {
-      setup((): void => {
+      setup(async (): Promise<void> => {
         process.argv.push('-q');
       });
 
-      teardown((): void => {
+      teardown(async (): Promise<void> => {
         process.argv.pop();
       });
 
