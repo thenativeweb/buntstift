@@ -24,7 +24,7 @@
   "types": "build/lib/buntstift.d.ts",
   "dependencies": {
     "chalk": "3.0.0",
-    "inquirer": "7.0.3",
+    "inquirer": "7.0.4",
     "node-spinner": "0.0.4"
   },
   "devDependencies": {
