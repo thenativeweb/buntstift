@@ -184,6 +184,14 @@ const answer = await buntstift.ask('What do you want to do today?', {
 });
 ```
 
+To ask for a password, provide an options object and set the `echo` property to `false`:
+
+```javascript
+const password = await buntstift.ask('Please enter your password:', {
+  echo: false
+});
+```
+
 ### Getting a confirmation
 
 If you want to get a conformation from the user, use the `confirm` function and provide a `question`:
