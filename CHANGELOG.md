@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/thenativeweb/buntstift/compare/3.0.4...3.1.0) (2020-01-27)
+
+
+### Features
+
+* Introduce echo option to hide input when asking for passwords. ([#92](https://github.com/thenativeweb/buntstift/issues/92)) ([e6a6f56](https://github.com/thenativeweb/buntstift/commit/e6a6f5625f68d9dc36d07ef17d6c76e0d2b3d0ae))
+
 ## [3.0.4](https://github.com/thenativeweb/buntstift/compare/3.0.3...3.0.4) (2020-01-25)
 
 
