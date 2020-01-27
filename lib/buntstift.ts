@@ -101,7 +101,7 @@ interface Buntstift {
   table(rows: any[][]): Buntstift;
   passThrough(message: any, options?: { prefix?: string; target?: 'stdout' | 'stderr' }): Buntstift;
   wait(): () => void;
-  ask(question: any, options?: RegExp | string | { default?: string; mask?: RegExp }): Promise<string>;
+  ask(question: any, options?: RegExp | string | { default?: string; mask?: RegExp; echo?: boolean }): Promise<string>;
   confirm(message: any, value: boolean): Promise<boolean>;
   select(question: any, choices: string[]): Promise<string>;
   exit(code: number): void;
@@ -267,26 +267,30 @@ const buntstift: Buntstift = {
   },
 
   ask: decorators.pauseSpinnerAsync(
-    async (question: any, options: RegExp | string | { default?: string; mask?: RegExp } = {}): Promise<string> => {
+    async (question: any, options: RegExp | string | { default?: string; mask?: RegExp; echo?: boolean } = {}): Promise<string> => {
       let defaultValue: string | undefined,
+          echo: boolean,
           mask: RegExp | undefined;
 
       if (options instanceof RegExp) {
         defaultValue = undefined;
+        echo = true;
         mask = options;
       } else if (typeof options === 'string') {
         defaultValue = options;
+        echo = true;
         mask = undefined;
       } else {
         defaultValue = options.default;
         /* eslint-disable prefer-destructuring */
+        echo = options.echo ?? true;
         mask = options.mask;
         /* eslint-enable prefer-destructuring */
       }
 
       const { answer } = await inquirer.prompt([
         {
-          type: 'input',
+          type: echo ? 'input' : 'password',
           name: 'answer',
           message: question,
           default: defaultValue,
