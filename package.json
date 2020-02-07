@@ -24,11 +24,14 @@
   "types": "build/lib/buntstift.d.ts",
   "dependencies": {
     "chalk": "3.0.0",
+    "humanize-string": "2.1.0",
     "inquirer": "7.0.4",
-    "node-spinner": "0.0.4"
+    "lodash": "4.17.15",
+    "ora": "4.0.3"
   },
   "devDependencies": {
     "@types/inquirer": "6.5.0",
+    "@types/lodash": "4.14.149",
     "assertthat": "5.1.0",
     "isansi": "2.0.1",
     "record-stdstreams": "3.0.0",

@@ -1,352 +1,418 @@
 import chalk from 'chalk';
+import { Configuration } from './Configuration';
+import humanizeString from 'humanize-string';
 import inquirer from 'inquirer';
-import { is } from './is';
-import { pad } from './pad';
-import Spinner from 'node-spinner';
-import { unicode } from './unicode';
+import { ListOptions } from './ListOptions';
+import { Message } from './Message';
+import { MessageType } from './MessageType';
+import { ModeOptions } from './ModeOptions';
+import ora from 'ora';
+import { PrefixOptions } from './PrefixOptions';
+import { RawOptions } from './RawOptions';
+import { TableOptions } from './TableOptions';
+import { cloneDeep, noop } from 'lodash';
 
-let characters = unicode[is.utf() ? 'utf8' : 'ascii'];
+class Buntstift {
+  private configuration: Configuration;
 
-let interval: NodeJS.Timeout | undefined,
-    stopSpinner: (() => void) | undefined;
+  private static readonly detectedColorLevel = chalk.level;
 
-type Unpacked<T> = T extends Promise<infer TValue> ? TValue : T;
+  private static spinner = ora({ color: 'white', spinner: 'dots' });
 
-const decorators = {
-  pauseSpinner <T extends (...args: any[]) => any>(fn: T): (...args: Parameters<typeof fn>) => ReturnType<typeof fn> {
-    return function (...args: Parameters<typeof fn>): ReturnType<typeof fn> {
-      let spinnerNeedsRestart = false;
-
-      if (stopSpinner) {
-        stopSpinner();
-        spinnerNeedsRestart = true;
-      }
-
-      const result = fn(...args);
-
-      if (spinnerNeedsRestart) {
-        /* eslint-disable @typescript-eslint/no-use-before-define */
-        buntstift.wait();
-        /* eslint-enable @typescript-eslint/no-use-before-define */
-      }
-
-      return result;
-    };
-  },
-
-  pauseSpinnerAsync <T extends (...args: any[]) => Promise<any>>(fn: T): (...args: Parameters<typeof fn>) => Promise<Unpacked<ReturnType<typeof fn>>> {
-    return async function (...args: Parameters<typeof fn>): Promise<Unpacked<ReturnType<typeof fn>>> {
-      let spinnerNeedsRestart = false;
-
-      if (stopSpinner) {
-        stopSpinner();
-        spinnerNeedsRestart = true;
-      }
-
-      const result = await fn(...args);
-
-      if (spinnerNeedsRestart) {
-        /* eslint-disable @typescript-eslint/no-use-before-define */
-        buntstift.wait();
-        /* eslint-enable @typescript-eslint/no-use-before-define */
-      }
-
-      return result;
-    };
-  },
-
-  skipIfQuiet <T extends (...args: any[]) => any>(fn: T): (...args: Parameters<typeof fn>) => Buntstift | ReturnType<typeof fn> {
-    return function (...args: Parameters<typeof fn>): Buntstift | ReturnType<typeof fn> {
-      if (is.quiet()) {
-        /* eslint-disable @typescript-eslint/no-use-before-define */
-        return buntstift;
-        /* eslint-enable @typescript-eslint/no-use-before-define */
-      }
-
-      const result = fn(...args);
-
-      return result;
-    };
-  },
-
-  skipIfNotVerbose <T extends (...args: any[]) => any>(fn: T): (...args: Parameters<typeof fn>) => Buntstift | ReturnType<typeof fn> {
-    return function (...args: Parameters<typeof fn>): Buntstift | ReturnType<typeof fn> {
-      if (!is.verbose()) {
-        /* eslint-disable @typescript-eslint/no-use-before-define */
-        return buntstift;
-        /* eslint-enable @typescript-eslint/no-use-before-define */
-      }
-
-      const result = fn(...args);
-
-      return result;
-    };
+  public constructor () {
+    this.configuration = new Configuration({
+      isColorEnabled: true,
+      isInteractiveSession: process.stdout.isTTY,
+      isQuietModeEnabled: false,
+      isUtf8Enabled: true,
+      isVerboseModeEnabled: false
+    });
   }
-};
 
-interface Buntstift {
-  forceColor(): void;
-  noColor(): void;
-  forceUtf(): void;
-  noUtf(): void;
-  error(message: any, options?: { prefix?: string }): Buntstift;
-  warn(message: any, options?: { prefix?: string }): Buntstift;
-  success(message: any, options?: { prefix?: string }): Buntstift;
-  info(message: any, options?: { prefix?: string }): Buntstift;
-  verbose(message: any, options?: { prefix?: string }): Buntstift;
-  line(): Buntstift;
-  header(headline: any, options?: { prefix?: string }): Buntstift;
-  list(message: any, options?: { prefix?: string; indent?: number }): Buntstift;
-  newLine(): Buntstift;
-  table(rows: any[][]): Buntstift;
-  passThrough(message: any, options?: { prefix?: string; target?: 'stdout' | 'stderr' }): Buntstift;
-  wait(): () => void;
-  ask(question: any, options?: RegExp | string | { default?: string; mask?: RegExp; echo?: boolean }): Promise<string>;
-  confirm(message: any, value: boolean): Promise<boolean>;
-  select(question: any, choices: string[]): Promise<string>;
-  exit(code: number): void;
+  protected getPrefix (messageType: MessageType, modeOptions?: ModeOptions): string {
+    switch (messageType) {
+      case 'error':
+        return this.isUtf8Enabled(modeOptions) ? '\u2717' : '!';
+      case 'warn':
+        return this.isUtf8Enabled(modeOptions) ? '\u25BB' : '>';
+      case 'success':
+        return this.isUtf8Enabled(modeOptions) ? '\u2713' : '+';
+      case 'info':
+        return ' ';
+      case 'verbose':
+        return ' ';
+      case 'header':
+        return this.isUtf8Enabled(modeOptions) ? '\u25BB' : '>';
+      case 'list':
+        return this.isUtf8Enabled(modeOptions) ? '\u2219' : '-';
+      default:
+        throw new Error('Invalid operation.');
+    }
+  }
+
+  protected isInteractiveSession (modeOptions?: ModeOptions): boolean {
+    if (typeof modeOptions?.isInteractiveSession === 'boolean') {
+      return modeOptions.isInteractiveSession;
+    }
+
+    return this.configuration.isInteractiveSession;
+  }
+
+  protected isQuietModeEnabled (modeOptions?: ModeOptions): boolean {
+    if (typeof modeOptions?.isQuietModeEnabled === 'boolean') {
+      return modeOptions.isQuietModeEnabled;
+    }
+
+    return this.configuration.isQuietModeEnabled;
+  }
+
+  protected isUtf8Enabled (modeOptions?: ModeOptions): boolean {
+    if (typeof modeOptions?.isUtf8Enabled === 'boolean') {
+      return modeOptions.isUtf8Enabled;
+    }
+
+    return this.configuration.isUtf8Enabled;
+  }
+
+  protected isVerboseModeEnabled (modeOptions?: ModeOptions): boolean {
+    if (typeof modeOptions?.isVerboseModeEnabled === 'boolean') {
+      return modeOptions.isVerboseModeEnabled;
+    }
+
+    return this.configuration.isVerboseModeEnabled;
+  }
+
+  protected static pauseSpinner (): () => void {
+    if (!Buntstift.spinner.isSpinning) {
+      return noop;
+    }
+
+    Buntstift.spinner.stop();
+
+    // eslint-disable-next-line unicorn/consistent-function-scoping
+    const resume = (): void => {
+      Buntstift.spinner.start();
+    };
+
+    return resume;
+  }
+
+  public configure (configuration: Configuration): void {
+    this.configuration = configuration;
+
+    chalk.level = this.configuration.isColorEnabled ? Buntstift.detectedColorLevel : chalk.Level.None;
+
+    if (this.configuration.isUtf8Enabled) {
+      Buntstift.spinner = ora({ color: 'white', spinner: 'dots' });
+    } else {
+      Buntstift.spinner = ora({ color: 'white', spinner: 'line' });
+    }
+  }
+
+  public getConfiguration (): Configuration {
+    return cloneDeep(this.configuration);
+  }
+
+  public wait (options?: ModeOptions): () => void {
+    if (this.isQuietModeEnabled(options) || !this.isInteractiveSession(options)) {
+      return noop;
+    }
+
+    Buntstift.spinner.start();
+
+    // eslint-disable-next-line unicorn/consistent-function-scoping
+    const stop = (): void => {
+      Buntstift.spinner.stop();
+    };
+
+    return stop;
+  }
+
+  public error (message: Message, options?: PrefixOptions & ModeOptions): Buntstift {
+    const resumeSpinner = Buntstift.pauseSpinner();
+    const prefix = options?.prefix ?? this.getPrefix('error', options);
+
+    console.error(chalk.red.bold(`${prefix} ${String(message)}`));
+    resumeSpinner();
+
+    return this;
+  }
+
+  public warn (message: Message, options?: PrefixOptions & ModeOptions): Buntstift {
+    const resumeSpinner = Buntstift.pauseSpinner();
+    const prefix = options?.prefix ?? this.getPrefix('warn', options);
+
+    console.error(chalk.yellow.bold(`${prefix} ${String(message)}`));
+    resumeSpinner();
+
+    return this;
+  }
+
+  public success (message: Message, options?: PrefixOptions & ModeOptions): Buntstift {
+    if (this.isQuietModeEnabled(options)) {
+      return this;
+    }
+
+    const resumeSpinner = Buntstift.pauseSpinner();
+    const prefix = options?.prefix ?? this.getPrefix('success', options);
+
+    console.log(chalk.green.bold(`${prefix} ${String(message)}`));
+    resumeSpinner();
+
+    return this;
+  }
+
+  public info (message: Message, options?: PrefixOptions & ModeOptions): Buntstift {
+    if (this.isQuietModeEnabled(options)) {
+      return this;
+    }
+
+    const resumeSpinner = Buntstift.pauseSpinner();
+    const prefix = options?.prefix ?? this.getPrefix('info', options);
+
+    console.log(chalk.white(`${prefix} ${String(message)}`));
+    resumeSpinner();
+
+    return this;
+  }
+
+  public verbose (message: Message, options?: PrefixOptions & ModeOptions): Buntstift {
+    if (this.isQuietModeEnabled(options)) {
+      return this;
+    }
+    if (!this.isVerboseModeEnabled(options)) {
+      return this;
+    }
+
+    const resumeSpinner = Buntstift.pauseSpinner();
+    const prefix = options?.prefix ?? this.getPrefix('verbose', options);
+
+    console.log(chalk.gray(`${prefix} ${String(message)}`));
+    resumeSpinner();
+
+    return this;
+  }
+
+  public line (options?: ModeOptions): Buntstift {
+    if (this.isQuietModeEnabled(options)) {
+      return this;
+    }
+
+    const resumeSpinner = Buntstift.pauseSpinner();
+    const dash = this.configuration.isUtf8Enabled ? '\u2500' : '-';
+
+    console.log(chalk.gray(dash.repeat(process.stdout.columns || 80)));
+    resumeSpinner();
+
+    return this;
+  }
+
+  public header (headline: Message, options?: PrefixOptions & ModeOptions): Buntstift {
+    if (this.isQuietModeEnabled(options)) {
+      return this;
+    }
+
+    const prefix = options?.prefix ?? this.getPrefix('header', options);
+
+    this.line(options);
+    this.info(headline, { ...options, prefix });
+    this.line(options);
+
+    return this;
+  }
+
+  public newLine (options?: ModeOptions): Buntstift {
+    if (this.isQuietModeEnabled(options)) {
+      return this;
+    }
+
+    const resumeSpinner = Buntstift.pauseSpinner();
+
+    console.log();
+    resumeSpinner();
+
+    return this;
+  }
+
+  public list (message: Message, options?: PrefixOptions & ModeOptions & ListOptions): Buntstift {
+    if (this.isQuietModeEnabled(options)) {
+      return this;
+    }
+
+    const prefix = options?.prefix ?? this.getPrefix('list', options);
+
+    const level = options?.level ?? 0;
+    const indent = (prefix.length + 1) * level;
+
+    const indentedPrefix = `${' '.repeat(indent)}${prefix}`;
+
+    this.info(message, { ...options, prefix: indentedPrefix });
+
+    return this;
+  }
+
+  public table (items: Record<string, Message>[], options?: ModeOptions & TableOptions): Buntstift {
+    if (this.isQuietModeEnabled(options)) {
+      return this;
+    }
+
+    const showHeader = options?.showHeader ?? true;
+
+    const columns: Record<string, { title: string; width: number }> = {};
+
+    for (const columnName of Object.keys(items[0])) {
+      const title = humanizeString(columnName);
+
+      columns[columnName] = { title, width: showHeader ? title.length : 0 };
+    }
+
+    for (const item of items) {
+      for (const [ columnName, value ] of Object.entries(item)) {
+        const lengthValue = String(value).length;
+
+        if (lengthValue > columns[columnName].width) {
+          columns[columnName].width = lengthValue;
+        }
+      }
+    }
+
+    if (showHeader) {
+      const headerData: string[] = [];
+
+      for (const column of Object.values(columns)) {
+        headerData.push(column.title.padEnd(column.width));
+      }
+
+      const header = headerData.join('  ');
+
+      this.info(header, options);
+
+      const dash = this.isUtf8Enabled(options) ? '\u2500' : '-';
+      const separatorData = [];
+
+      for (const column of Object.values(columns)) {
+        separatorData.push(dash.repeat(column.width));
+      }
+
+      const separator = separatorData.join('  ');
+
+      this.info(separator, options);
+    }
+
+    for (const item of items) {
+      const data: string[] = [];
+
+      for (const [ key, value ] of Object.entries(item)) {
+        if (typeof value === 'number') {
+          data.push(String(value).padStart(columns[key].width));
+        } else {
+          data.push(String(value).padEnd(columns[key].width));
+        }
+      }
+
+      const line = data.join('  ');
+
+      this.info(line, options);
+    }
+
+    return this;
+  }
+
+  public raw (message: Message, options?: RawOptions): Buntstift {
+    const resumeSpinner = Buntstift.pauseSpinner();
+    const target = options?.target ?? 'stdout';
+
+    process[target].write(String(message));
+    resumeSpinner();
+
+    return this;
+  }
+
+  /* eslint-disable class-methods-use-this */
+  public async ask (question: string, options?: RegExp | string | { default?: string; mask?: RegExp; echo?: boolean }): Promise<string> {
+    const resumeSpinner = Buntstift.pauseSpinner();
+
+    let defaultValue: string | undefined,
+        echo: boolean,
+        mask: RegExp | undefined;
+
+    if (options instanceof RegExp) {
+      defaultValue = undefined;
+      echo = true;
+      mask = options;
+    } else if (typeof options === 'string') {
+      defaultValue = options;
+      echo = true;
+      mask = undefined;
+    } else {
+      defaultValue = options?.default;
+      /* eslint-disable prefer-destructuring */
+      echo = options?.echo ?? true;
+      mask = options?.mask;
+      /* eslint-enable prefer-destructuring */
+    }
+
+    const { answer } = await inquirer.prompt([
+      {
+        type: echo ? 'input' : 'password',
+        name: 'answer',
+        message: question,
+        default: defaultValue,
+        validate (value: string): boolean | string {
+          if (mask && !mask.test(value)) {
+            return 'Malformed input, please retry.';
+          }
+
+          return true;
+        }
+      }
+    ]);
+
+    resumeSpinner();
+
+    return answer;
+  }
+  /* eslint-enable class-methods-use-this */
+
+  /* eslint-disable class-methods-use-this */
+  public async confirm (message: string, value = true): Promise<boolean> {
+    const resumeSpinner = Buntstift.pauseSpinner();
+
+    const { isConfirmed } = await inquirer.prompt([
+      {
+        type: 'confirm',
+        name: 'isConfirmed',
+        message,
+        default: value
+      }
+    ]);
+
+    resumeSpinner();
+
+    return isConfirmed;
+  }
+  /* eslint-enable class-methods-use-this */
+
+  /* eslint-disable class-methods-use-this */
+  public async select (question: string, choices: string[]): Promise<string> {
+    const resumeSpinner = Buntstift.pauseSpinner();
+
+    const { selection } = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'selection',
+        message: question,
+        choices
+      }
+    ]);
+
+    resumeSpinner();
+
+    return selection;
+  }
+  /* eslint-enable class-methods-use-this */
 }
 
-const buntstift: Buntstift = {
-  forceColor (): void {
-    chalk.level = 3;
-  },
-
-  noColor (): void {
-    chalk.level = 0;
-  },
-
-  forceUtf (): void {
-    characters = unicode.utf8;
-  },
-
-  noUtf (): void {
-    characters = unicode.ascii;
-  },
-
-  error: decorators.pauseSpinner(
-    (message: any, { prefix = characters.crossMark }: { prefix?: string } = {}): typeof buntstift => {
-      console.error(chalk.red.bold(`${prefix} ${String(message)}`));
-
-      return buntstift;
-    }
-  ),
-
-  warn: decorators.pauseSpinner(
-    (message: any, { prefix = characters.rightPointingPointer }: { prefix?: string } = {}): typeof buntstift => {
-      console.error(chalk.yellow.bold(`${prefix} ${String(message)}`));
-
-      return buntstift;
-    }
-  ),
-
-  success: decorators.skipIfQuiet(decorators.pauseSpinner(
-    (message: any, { prefix = characters.checkMark }: { prefix?: string } = {}): typeof buntstift => {
-      console.log(chalk.green.bold(`${prefix} ${String(message)}`));
-
-      return buntstift;
-    }
-  )),
-
-  info: decorators.skipIfQuiet(decorators.pauseSpinner(
-    (message: any, { prefix = ' ' }: { prefix?: string } = {}): typeof buntstift => {
-      console.log(chalk.white(`${prefix} ${String(message)}`));
-
-      return buntstift;
-    }
-  )),
-
-  verbose: decorators.skipIfQuiet(decorators.skipIfNotVerbose(decorators.pauseSpinner(
-    (message: any, { prefix = ' ' }: { prefix?: string } = {}): typeof buntstift => {
-      console.log(chalk.gray(`${prefix} ${String(message)}`));
-
-      return buntstift;
-    }
-  ))),
-
-  line: decorators.skipIfQuiet(decorators.pauseSpinner(
-    (): typeof buntstift => {
-      console.log(chalk.gray('\u2500'.repeat(process.stdout.columns || 80)));
-
-      return buntstift;
-    }
-  )),
-
-  header (headline: any, { prefix = characters.rightPointingPointer }: { prefix?: string } = {}): typeof buntstift {
-    buntstift.line();
-    buntstift.info(headline, { prefix });
-    buntstift.line();
-
-    return buntstift;
-  },
-
-  list (message: any, { prefix = characters.multiplicationDot, indent = 0 }: { prefix?: string; indent?: number } = {}): typeof buntstift {
-    const width = indent * (prefix.length + 1);
-
-    const paddedPrefix = new Array(width + 1).join(' ') + prefix;
-
-    buntstift.info(message, { prefix: paddedPrefix });
-
-    return buntstift;
-  },
-
-  newLine: decorators.skipIfQuiet(decorators.pauseSpinner(
-    (): typeof buntstift => {
-      console.log();
-
-      return buntstift;
-    }
-  )),
-
-  table (rows: any[][]): typeof buntstift {
-    const widths: number[] = [];
-
-    rows.forEach((row: any[]): void => {
-      row.forEach((value: any, columnIndex: number): void => {
-        widths[columnIndex] = Math.max(widths[columnIndex] || 0, String(value).length);
-      });
-    });
-
-    rows.forEach((row: any[]): void => {
-      const line: string[] = [];
-
-      if (row.length > 0) {
-        row.forEach((value: any, columnIndex: number): void => {
-          line.push(pad(value, widths[columnIndex]));
-        });
-      } else {
-        widths.forEach((width: number): void => {
-          line.push(new Array(width + 1).join(characters.boxDrawingsLightHorizontal));
-        });
-      }
-
-      buntstift.info(line.join('  '));
-    });
-
-    return buntstift;
-  },
-
-  passThrough: decorators.pauseSpinner(
-    (message: any, { prefix = ' ', target = 'stdout' }: { prefix?: string; target?: 'stdout' | 'stderr' } = {}): typeof buntstift => {
-      if (is.quiet() && target === 'stdout') {
-        return buntstift;
-      }
-
-      process[target].write(`${prefix || ' '} ${String(message)}`);
-
-      return buntstift;
-    }
-  ),
-
-  wait (): () => void {
-    if (is.quiet() || !is.interactiveMode()) {
-      return function (): void {
-        // Intentionally left blank.
-      };
-    }
-
-    if (stopSpinner) {
-      return stopSpinner;
-    }
-
-    const spinner = new Spinner();
-
-    interval = setInterval((): void => {
-      process.stderr.write(`\r${spinner.next()}`);
-    }, 50);
-
-    stopSpinner = function (): void {
-      stopSpinner = undefined;
-      process.stderr.write('\r \r');
-      if (interval) {
-        clearInterval(interval);
-      }
-    };
-
-    return stopSpinner;
-  },
-
-  ask: decorators.pauseSpinnerAsync(
-    async (question: any, options: RegExp | string | { default?: string; mask?: RegExp; echo?: boolean } = {}): Promise<string> => {
-      let defaultValue: string | undefined,
-          echo: boolean,
-          mask: RegExp | undefined;
-
-      if (options instanceof RegExp) {
-        defaultValue = undefined;
-        echo = true;
-        mask = options;
-      } else if (typeof options === 'string') {
-        defaultValue = options;
-        echo = true;
-        mask = undefined;
-      } else {
-        defaultValue = options.default;
-        /* eslint-disable prefer-destructuring */
-        echo = options.echo ?? true;
-        mask = options.mask;
-        /* eslint-enable prefer-destructuring */
-      }
-
-      const { answer } = await inquirer.prompt([
-        {
-          type: echo ? 'input' : 'password',
-          name: 'answer',
-          message: question,
-          default: defaultValue,
-          validate (value: string): boolean | string {
-            if (mask && !mask.test(value)) {
-              return 'Malformed input, please retry.';
-            }
-
-            return true;
-          }
-        }
-      ]);
-
-      return answer;
-    }
-  ),
-
-  confirm: decorators.pauseSpinnerAsync(
-    async (message: any, value = true): Promise<boolean> => {
-      const { isConfirmed } = await inquirer.prompt([
-        {
-          type: 'confirm',
-          name: 'isConfirmed',
-          message,
-          default: value
-        }
-      ]);
-
-      return isConfirmed;
-    }
-  ),
-
-  select: decorators.pauseSpinnerAsync(
-    async (question: any, choices: string[]): Promise<string> => {
-      const { selection } = await inquirer.prompt([
-        {
-          type: 'list',
-          name: 'selection',
-          message: question,
-          choices
-        }
-      ]);
-
-      return selection;
-    }
-  ),
-
-  exit (code = 0): void {
-    if (stopSpinner) {
-      stopSpinner();
-    }
-
-    /* eslint-disable unicorn/no-process-exit */
-    process.exit(code);
-    /* eslint-enable unicorn/no-process-exit */
-  }
-};
+const buntstift = new Buntstift();
 
 export { buntstift };

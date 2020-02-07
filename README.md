@@ -22,7 +22,7 @@ $ npm install buntstift
 
 ## Quick start
 
-First you need to integrate buntstift into your application.
+First you need to integrate buntstift into your application:
 
 ```javascript
 const { buntstift } = require('buntstift');
@@ -41,9 +41,9 @@ buntstift.info('Updating...')
 buntstift.success('Done.');
 ```
 
-_Please note that `error` and `warn` write messages to the standard error stream, all other functions write them to the standard output stream._
+*Please note that `error` and `warn` write messages to the standard error stream, all other functions write them to the standard output stream.*
 
-Additionally, there is the `passThrough` function that does not do any formatting.
+Additionally, there is the `raw` function that does not do any formatting.
 
 ### Formatting messages
 
@@ -87,7 +87,7 @@ To write a list to the console use the `list` function. Optionally, you may spec
 ```javascript
 buntstift.list('foo');
 buntstift.list('bar');
-buntstift.list('baz', { indent: 1 });
+buntstift.list('baz', { level: 1 });
 
 // => ∙ foo
 //    ∙ bar
@@ -98,14 +98,12 @@ You may change the bullet character using the `prefix` property in the way descr
 
 ## Using tables
 
-To write data formatted as a table use the `table` function. Provide the data as an array of arrays. If you want to insert a separator line, provide an empty array.
+To write data formatted as a table use the `table` function. Provide the data as an array of objects. The keys are rendered as headers in a human-readable way.
 
 ```javascript
 buntstift.table([
-  [ 'Key', 'Value' ],
-  [],
-  [ 'foo', 23 ],
-  [ 'bar', 7 ]
+  [{ key: 'foo', value: 23 }],
+  [{ key: 'bar', value: 7 }]
 ]);
 
 // => Key  Value
@@ -115,6 +113,8 @@ buntstift.table([
 ```
 
 The individual cells become padded automatically: Numbers are aligned to the right, anything else is aligned to the left.
+
+If you don't want to show the headers and the separator line, provide an additional `options` object and set its `showHeader` property to false.
 
 ## Enabling verbose and quiet mode
 
@@ -216,14 +216,6 @@ const favoriteColor = await buntstift.select('What is your favorite color?', [
   'green',
   'blue'
 ]);
-```
-
-## Shutting down an application
-
-To shutdown an application, call the `exit` function. Optionally, you may specify an exit code; if you don't, `0` is used.
-
-```javascript
-buntstift.exit();
 ```
 
 ## Chaining functions
