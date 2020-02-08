@@ -62,6 +62,12 @@ const preformattedOutput = // ...
 buntstift.raw(preformattedOutput);
 ```
 
+By default, `raw` writes to the application's standard output stream. Sometimes you want the message to go to the standard error stream instead. For that, provide an options object and specify `stderr` as the target:
+
+```javascript
+buntstift.raw(preformattedOutput, { target: 'stderr' });
+```
+
 ### Prefixing messages
 
 Except `raw`, all the aforementioned functions are able to show a prefix before the actual message, and some of them do so by default. To explicitly set a prefix, provide an options object and set its `prefix` property to the desired value:
