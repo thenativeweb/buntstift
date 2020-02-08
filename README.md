@@ -34,55 +34,148 @@ If you use TypeScript, use the following code instead:
 import { buntstift } from 'buntstift';
 ```
 
-To write messages to the console use the `success` and `error` functions to show that your application has succeeded or failed. If you want to provide additional information, use the `info` and `verbose` functions. In case of any warnings, use the `warn` function.
+To show messages in the terminal, use the `info` function:
 
 ```javascript
-buntstift.info('Updating...')
-buntstift.success('Done.');
+buntstift.info('Server started on port 3000.');
 ```
 
-*Please note that `error` and `warn` write messages to the standard error stream, all other functions write them to the standard output stream.*
-
-Additionally, there is the `raw` function that does not do any formatting.
-
-### Formatting messages
-
-You can use the `options` object to change the prefix of the various message writing functions. For that, simply provide a `prefix` property and set it to the desired character.
+If you need to highlight messages, use `success`, `error`, and `warn` instead of `info`:
 
 ```javascript
-buntstift.error('App stopped.', { prefix: 'X' });
-// => X App stopped.
+buntstift.success('Server started on port 3000.');
+buntstift.error('Failed to start server.');
+buntstift.warn('Server started, but without IPv6 support.');
 ```
 
-## Printing headers
-
-To print a header call the `header` function.
+Finally, there is also `verbose` to show messages meant for debugging or analysing application flow. Please note that by default, these messages are not shown in the terminal, unless you explicitly enable verbose mode:
 
 ```javascript
-buntstift.header('Running tests...');
+buntstift.verbose('Verifying whether port 3000 is available...');
 ```
 
-You may change the right pointing character using the `prefix` property in the way described above.
-
-## Printing blank lines
-
-To print a blank line call the `newLine` function.
+To show messages on the terminal without any support from buntstift, e.g. to pass through some already preformatted output, use the `raw` function:
 
 ```javascript
-buntstift.newLine();
+const preformattedOutput = // ...
+
+buntstift.raw(preformattedOutput);
 ```
 
-## Printing lines
+### Prefixing messages
 
-To print a line call the `line` function.
+Except `raw`, all the aforementioned functions are able to show a prefix before the actual message, and some of them do so by default. To explicitly set a prefix, provide an options object and set its `prefix` property to the desired value:
+
+```javascript
+buntstift.success('Server started on port 3000.', { prefix: 'OK' });
+// => OK Server started on port 3000.
+```
+
+### Configuring buntstift
+
+By default, buntstift tries to use reasonable defaults. However, sometimes you may need to change its configuration. For that, first use the `getConfiguration` function to get the current configuration:
+
+```javascript
+const configuration = buntstift.getConfiguration();
+```
+
+The configuration object now has a number of functions (see section below) to adjust the configuration. E.g., to disable colors, call the `withColor` function and hand over `false` as parameter:
+
+```javascript
+const updatedConfiguration = configuration.withColor(false);
+```
+
+*Please note that all of the functions on the configuration object do not mutate the configuration, but return a new instance instead!*
+
+Finally, set the new configuration using the `configure` function. Typically, because of the configuration object's immutability, you may want to do all of this in a single line:
+
+```javascript
+buntstift.configure(
+  buntstift.getConfiguration().
+    withColor(false).
+    withUtf8(false)
+);
+```
+
+#### Enabling or disabling colors
+
+By default, buntstift uses colors to show its messages. To explicitly enable or disable colors, use the `withColor` function:
+
+```javascript
+const updatedConfiguration = configuration.withColor(true);
+```
+
+#### Enabling or disabling interactive sessions
+
+In interactive sessions the spinner is shown in the terminal, while in non-interactive sessions it is hidden. By default, buntstift tries to detect whether a session is interative or not. To explicitly enable or disable interactive sessions, use the `withInteractiveSession` function:
+
+```javascript
+const updatedConfiguration = configuration.withInteractiveSession(true);
+```
+
+#### Enabling or disabling quiet mode
+
+In quiet mode no messages are written to the terminal any more, except messages written using `error`, `warn`, and `raw`. By default, the quiet mode is disabled. To enable or disable quiet mode, use the `withQuietMode` function:
+
+```javascript
+const updatedConfiguration = configuration.withQuietMode(true);
+```
+
+#### Enabling or disabling UTF8
+
+By default, buntstift uses some UTF8 insteaf of simple ASCII characters. To enable or disable UTF8, use the `withUtf8` function:
+
+```javascript
+const updatedConfiguration = configuration.withUtf8(true);
+```
+
+#### Enabling or disabling verbose mode
+
+In verbose mode, messages written using `verbose` are shown in the terminal, while in non-verbose mode, they are silently skipped. To enable or disable verbose mode, use the `withVerboseMode` function:
+
+```javascript
+const updatedConfiguration = configuration.withVerboseMode(true);
+```
+
+### Configuring individual messages
+
+From time to time, you may want to change the configuration, but limit the effect of these changes to individual messages. For that, you can pass configuration options when calling buntstift functions. E.g., to disable UTF8 for a single message, use the following code:
+
+```javascript
+buntstift.success('Server started on port 3000.', { isUtf8Enabled: false });
+```
+
+You may also the properties `isColorEnabled`, `isInteractiveSession`, `isQuietModeEnabled`, and `isVerboseModeEnabled`.
+
+### Using lines
+
+To show a line, e.g. to separate two sections, use the `line` function:
 
 ```javascript
 buntstift.line();
 ```
 
+### Using headers
+
+To show a header, e.g. to denote the start of a new section, use the `header` function:
+
+```javascript
+buntstift.header('Running tests...');
+```
+
+You may change the header's prefix using the `prefix` property mentioned above.
+
+### Using empty lines
+
+To show an empty line, use the `newLine` function:
+
+```javascript
+buntstift.newLine();
+```
+
 ## Using lists
 
-To write a list to the console use the `list` function. Optionally, you may specify an indentation level. Setting the indentation level to `0` is equal to omitting it.
+To show a list in the terminal use `list` and provide a list item. Optionally, you may specify an indentation level. Setting the indentation level to `0` is equal to omitting it:
 
 ```javascript
 buntstift.list('foo');
@@ -94,70 +187,59 @@ buntstift.list('baz', { level: 1 });
 //      ∙ baz
 ```
 
-You may change the bullet character using the `prefix` property in the way described above.
+You may change the list item's bullet using the `prefix` property mentioned above.
 
-## Using tables
+### Using tables
 
-To write data formatted as a table use the `table` function. Provide the data as an array of objects. The keys are rendered as headers in a human-readable way.
+From time to time you need to show tabular data in the terminal. For that, use `table` and provide an array of objects to use as rows. The objects all must have the very same properties, i.e. they must match the same interface.
+
+The keys of the row objects are rendered as table header in a human-readable way. The individual cells become padded automatically. Numbers are aligned to the right, anything else is aligned to the left:
 
 ```javascript
 buntstift.table([
-  [{ key: 'foo', value: 23 }],
-  [{ key: 'bar', value: 7 }]
+  [{ protocol: 'http', port: 80 }],
+  [{ protocol: 'https', port: 443 }]
 ]);
 
-// => Key  Value
-//    ───  ─────
-//    foo     23
-//    bar      7
+// => Protocol  Port
+//    ────────  ────
+//    http        80
+//    https      443
 ```
 
-The individual cells become padded automatically: Numbers are aligned to the right, anything else is aligned to the left.
+If you don't want to show the header, additionally provide an options object and set its `showHeader` property to `false`:
 
-If you don't want to show the headers and the separator line, provide an additional `options` object and set its `showHeader` property to false.
+```javascript
+buntstift.table([
+  [{ protocol: 'http', port: 80 }],
+  [{ protocol: 'https', port: 443 }]
+], { showHeader: false });
 
-## Enabling verbose and quiet mode
+// => http    80
+//    https  443
+```
 
-By default, only messages written by `success`, `error`, `info` and `warn` are shown on the console. To enable `verbose` as well, provide the `--verbose` command line switch when running the application. Alternatively, you may use its short form, `-v`.
+### Waiting for long-running tasks
 
-If you want to disable any output except `error` and `warn`, provide the `--quiet` command line switch. Again, you may use its short form, `-q`.
-
-## Enabling and disabling colors
-
-If you run a cli application in non-interactive mode, i.e. scripted, using colors is automatically being disabled. If you want to force usage of colors, provide the `--color` command line switch.
-
-In turn, if you want to force disable colors even when in interactive mode, provide the `--no-color` command line switch.
-
-Alternatively, you may use the `forceColor` and `noColor` functions.
-
-## Disabling UTF characters
-
-If your system does not support UTF characters, disable them using the `--no-utf` command line switch.
-
-Alternatively, you may use the `forceUtf` and `noUtf` functions.
-
-## Waiting for long-running tasks
-
-If your application performs a long-running task, you may use the `wait` function to show a waiting indicator to the user.
+If your application performs a long-running task, you may want to show a spinner in the terminal. For that, call the `wait` function, which returns another function to stop the spinner at a later point in time. If you use any buntstift function while the spinner is active, buntstift will take care of disabling and re-enabling the spinner as needed, to avoid flickering:
 
 ```javascript
 const stop = buntstift.wait();
 
 // ...
+
 stop();
 ```
 
-_Please note that the loading indicator is written to the application's standard error stream._
+*Please note that the spinner is written to the application's standard error stream, not to the standard output stream.*
 
-If you run the application using the `--quiet` command line switch, or if you run the application in non-interactive mode, no loading indicator will be shown at all.
-
-## Getting user input
+### Getting user input
 
 Besides the various ways to display information, buntstift is also able to get input from the user. For that, use the `ask`, `confirm` and `select` functions.
 
-### Asking a question
+#### Asking a question
 
-If you want to ask a question to the user, use the `ask` function and provide a `question`:
+If you want to ask a question to the user, use `ask` and provide a `question`:
 
 ```javascript
 const answer = await buntstift.ask('What do you want to do today?');
@@ -192,9 +274,9 @@ const password = await buntstift.ask('Please enter your password:', {
 });
 ```
 
-### Getting a confirmation
+#### Getting a confirmation
 
-If you want to get a conformation from the user, use the `confirm` function and provide a `question`:
+If you want to get a conformation from the user, use `confirm` and provide a `question`:
 
 ```javascript
 const isSure = await buntstift.confirm('Are you sure?');
@@ -206,9 +288,9 @@ Unless specified otherwise, the default answer is `true`. To change this, provid
 const isSure = await buntstift.confirm('Are you sure?', false);
 ```
 
-### Selecting from a list
+#### Selecting from a list
 
-If you want the user to select a value from a list, use the `select` function and provide a `question` as well as a selection of choices:
+If you want the user to select a value from a list, use `select` and provide a `question` as well as a selection of choices:
 
 ```javascript
 const favoriteColor = await buntstift.select('What is your favorite color?', [
@@ -218,14 +300,19 @@ const favoriteColor = await buntstift.select('What is your favorite color?', [
 ]);
 ```
 
-## Chaining functions
+### Chaining functions
 
-If you want to run a number of actions as a sequence, you can chain all of buntstift's synchronous functions.
+If you want to run a number of buntstift functions as a sequence, you can chain them into a single call (as long as you limit yourself to the synchronous functions):
 
 ```javascript
-buntstift.
-  error('App failed.').
-  exit(1);
+try {
+  // ...
+} catch (ex) {
+  buntstift.
+    error('An unexpected error occured.').
+    info(ex.message).
+    verbose(ex.stack);
+}
 ```
 
 ## Running the build
