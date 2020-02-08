@@ -9,7 +9,7 @@ const sleep = promisify(setTimeout);
 
 suite('buntstift', (): void => {
   suite('wait', (): void => {
-    test('shows a waiting indicator on stderr in interactive mode.', async (): Promise<void> => {
+    test('shows a waiting indicator on stderr in interactive sessions.', async (): Promise<void> => {
       const stop = record();
       const stopWaiting = buntstift.wait({ isInteractiveSession: true });
 
@@ -22,7 +22,7 @@ suite('buntstift', (): void => {
       assert.that(stderr).is.not.equalTo('');
     });
 
-    test('shows nothing when the application is not in interactive mode.', async (): Promise<void> => {
+    test('shows nothing in non-interactive sessions.', async (): Promise<void> => {
       const stop = record();
       const stopWaiting = buntstift.wait({ isInteractiveSession: false });
 
@@ -46,7 +46,6 @@ suite('buntstift', (): void => {
 
       assert.that(stdout).is.equalTo('');
       assert.that(stderr).is.equalTo('');
-      process.argv.pop();
     });
   });
 
@@ -541,7 +540,10 @@ suite('buntstift', (): void => {
 
       const { stdout } = stop();
 
-      assert.that(stripAnsi(stdout)).is.equalTo('  foo  bar  baz\n  bar  baz  foo\n');
+      assert.that(stripAnsi(stdout)).is.equalTo([
+        '  foo  bar  baz\n',
+        '  bar  baz  foo\n'
+      ].join(''));
     });
 
     test('pads cells.', async (): Promise<void> => {
@@ -554,7 +556,10 @@ suite('buntstift', (): void => {
 
       const { stdout } = stop();
 
-      assert.that(stripAnsi(stdout)).is.equalTo('  fooA  bar  baz \n  bar   baz  fooB\n');
+      assert.that(stripAnsi(stdout)).is.equalTo([
+        '  fooA  bar  baz \n',
+        '  bar   baz  fooB\n'
+      ].join(''));
     });
 
     test('inserts a separator line.', async (): Promise<void> => {
