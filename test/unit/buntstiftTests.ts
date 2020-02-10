@@ -4,114 +4,48 @@ import { isAnsi } from 'isansi';
 import { promisify } from 'util';
 import { record } from 'record-stdstreams';
 import stripAnsi from 'strip-ansi';
-import { unicode } from '../../lib/unicode';
 
 const sleep = promisify(setTimeout);
 
 suite('buntstift', (): void => {
-  test('is an object.', async (): Promise<void> => {
-    assert.that(buntstift).is.ofType('object');
-  });
-
-  suite('newLine', (): void => {
-    test('writes a blank line to stdout.', async (): Promise<void> => {
+  suite('wait', (): void => {
+    test('shows a waiting indicator on stderr in interactive sessions.', async (): Promise<void> => {
       const stop = record();
+      const stopWaiting = buntstift.wait({ isInteractiveSession: true });
 
-      buntstift.newLine();
+      await sleep(0.2 * 1000);
+      stopWaiting();
 
-      const { stdout } = stop();
-
-      assert.that(stdout).is.equalTo('\n');
-    });
-
-    test('does nothing when --quiet is set.', async (): Promise<void> => {
-      process.argv.push('--quiet');
-
-      const stop = record();
-
-      buntstift.newLine();
-
-      const { stdout } = stop();
+      const { stdout, stderr } = stop();
 
       assert.that(stdout).is.equalTo('');
-      process.argv.pop();
+      assert.that(stderr).is.not.equalTo('');
     });
 
-    test('returns a reference to buntstift.', async (): Promise<void> => {
-      assert.that(buntstift.newLine()).is.sameAs(buntstift);
-    });
-  });
-
-  suite('success', (): void => {
-    test('writes a message in green and bold to stdout.', async (): Promise<void> => {
+    test('shows nothing in non-interactive sessions.', async (): Promise<void> => {
       const stop = record();
+      const stopWaiting = buntstift.wait({ isInteractiveSession: false });
 
-      buntstift.success('foo');
+      await sleep(0.2 * 1000);
+      stopWaiting();
 
-      const { stdout } = stop();
-
-      assert.that(isAnsi.green(stdout)).is.true();
-      assert.that(isAnsi.bold(stdout)).is.true();
-    });
-
-    test('writes a message with a check mark.', async (): Promise<void> => {
-      const stop = record();
-
-      buntstift.success('foo');
-
-      const { stdout } = stop();
-
-      assert.that(stripAnsi(stdout)).is.equalTo(`${unicode.utf8.checkMark} foo\n`);
-    });
-
-    test('writes a message with an ASCII-compatible check mark if --no-utf is set.', async (): Promise<void> => {
-      buntstift.noUtf();
-
-      const stop = record();
-
-      buntstift.success('foo');
-
-      const { stdout } = stop();
-
-      assert.that(stripAnsi(stdout)).is.equalTo('+ foo\n');
-      buntstift.forceUtf();
-    });
-
-    test('writes a stringified message if necessary.', async (): Promise<void> => {
-      const stop = record();
-
-      buntstift.success(23);
-
-      const { stdout } = stop();
-
-      assert.that(stripAnsi(stdout)).is.equalTo(`${unicode.utf8.checkMark} 23\n`);
-    });
-
-    test('replaces the check mark if a prefix is explicitly given.', async (): Promise<void> => {
-      const stop = record();
-
-      buntstift.success('foo', { prefix: '-' });
-
-      const { stdout } = stop();
-
-      assert.that(stripAnsi(stdout)).is.equalTo('- foo\n');
-    });
-
-    test('does nothing when --quiet is set.', async (): Promise<void> => {
-      process.argv.push('--quiet');
-
-      const stop = record();
-
-      buntstift.success('foo');
-
-      const { stdout } = stop();
+      const { stdout, stderr } = stop();
 
       assert.that(stdout).is.equalTo('');
-      process.argv.pop();
+      assert.that(stderr).is.equalTo('');
     });
 
-    test('returns a reference to buntstift.', async (): Promise<void> => {
-      assert.that(buntstift.success('foo')).is.sameAs(buntstift);
+    test('shows nothing in quiet mode.', async (): Promise<void> => {
+      const stop = record();
+      const stopWaiting = buntstift.wait({ isQuietModeEnabled: true });
+
+      await sleep(0.2 * 1000);
+      stopWaiting();
+
+      const { stdout, stderr } = stop();
+
+      assert.that(stdout).is.equalTo('');
+      assert.that(stderr).is.equalTo('');
     });
   });
 
@@ -134,20 +68,17 @@ suite('buntstift', (): void => {
 
       const { stderr } = stop();
 
-      assert.that(stripAnsi(stderr)).is.equalTo(`${unicode.utf8.crossMark} foo\n`);
+      assert.that(stripAnsi(stderr)).is.equalTo(`✗ foo\n`);
     });
 
-    test('writes a message with an ASCII-compatible cross if --no-utf is set.', async (): Promise<void> => {
-      buntstift.noUtf();
-
+    test('writes a message with an ASCII-compatible cross if UTF8 is not available.', async (): Promise<void> => {
       const stop = record();
 
-      buntstift.error('foo');
+      buntstift.error('foo', { isUtf8Enabled: false });
 
       const { stderr } = stop();
 
       assert.that(stripAnsi(stderr)).is.equalTo('! foo\n');
-      buntstift.forceUtf();
     });
 
     test('writes a stringified message if necessary.', async (): Promise<void> => {
@@ -157,7 +88,7 @@ suite('buntstift', (): void => {
 
       const { stderr } = stop();
 
-      assert.that(stripAnsi(stderr)).is.equalTo(`${unicode.utf8.crossMark} 23\n`);
+      assert.that(stripAnsi(stderr)).is.equalTo(`✗ 23\n`);
     });
 
     test('replaces the check mark if a prefix is explicitly given.', async (): Promise<void> => {
@@ -170,21 +101,14 @@ suite('buntstift', (): void => {
       assert.that(stripAnsi(stderr)).is.equalTo('- foo\n');
     });
 
-    test('still works when --quiet is set.', async (): Promise<void> => {
-      process.argv.push('--quiet');
-
+    test('still works in quiet mode.', async (): Promise<void> => {
       const stop = record();
 
-      buntstift.error('foo');
+      buntstift.error('foo', { isQuietModeEnabled: true });
 
       const { stderr } = stop();
 
-      assert.that(stripAnsi(stderr)).is.equalTo(`${unicode.utf8.crossMark} foo\n`);
-      process.argv.pop();
-    });
-
-    test('returns a reference to buntstift.', async (): Promise<void> => {
-      assert.that(buntstift.error('foo')).is.sameAs(buntstift);
+      assert.that(stripAnsi(stderr)).is.equalTo(`✗ foo\n`);
     });
   });
 
@@ -207,20 +131,17 @@ suite('buntstift', (): void => {
 
       const { stderr } = stop();
 
-      assert.that(stripAnsi(stderr)).is.equalTo(`${unicode.utf8.rightPointingPointer} foo\n`);
+      assert.that(stripAnsi(stderr)).is.equalTo(`▻ foo\n`);
     });
 
-    test('writes a message with an ASCII-compatible pointer if --no-utf is set.', async (): Promise<void> => {
-      buntstift.noUtf();
-
+    test('writes a message with an ASCII-compatible pointer if UTF8 is not available.', async (): Promise<void> => {
       const stop = record();
 
-      buntstift.warn('foo');
+      buntstift.warn('foo', { isUtf8Enabled: false });
 
       const { stderr } = stop();
 
       assert.that(stripAnsi(stderr)).is.equalTo('> foo\n');
-      buntstift.forceUtf();
     });
 
     test('writes a stringified message if necessary.', async (): Promise<void> => {
@@ -230,7 +151,7 @@ suite('buntstift', (): void => {
 
       const { stderr } = stop();
 
-      assert.that(stripAnsi(stderr)).is.equalTo(`${unicode.utf8.rightPointingPointer} 23\n`);
+      assert.that(stripAnsi(stderr)).is.equalTo(`▻ 23\n`);
     });
 
     test('replaces the check mark if a prefix is explicitly given.', async (): Promise<void> => {
@@ -243,21 +164,77 @@ suite('buntstift', (): void => {
       assert.that(stripAnsi(stderr)).is.equalTo('- foo\n');
     });
 
-    test('still works when --quiet is set.', async (): Promise<void> => {
-      process.argv.push('--quiet');
-
+    test('still works in quiet mode.', async (): Promise<void> => {
       const stop = record();
 
-      buntstift.warn('foo');
+      buntstift.warn('foo', { isQuietModeEnabled: true });
 
       const { stderr } = stop();
 
-      assert.that(stripAnsi(stderr)).is.equalTo(`${unicode.utf8.rightPointingPointer} foo\n`);
-      process.argv.pop();
+      assert.that(stripAnsi(stderr)).is.equalTo(`▻ foo\n`);
+    });
+  });
+
+  suite('success', (): void => {
+    test('writes a message in green and bold to stdout.', async (): Promise<void> => {
+      const stop = record();
+
+      buntstift.success('foo');
+
+      const { stdout } = stop();
+
+      assert.that(isAnsi.green(stdout)).is.true();
+      assert.that(isAnsi.bold(stdout)).is.true();
     });
 
-    test('returns a reference to buntstift.', async (): Promise<void> => {
-      assert.that(buntstift.warn('foo')).is.sameAs(buntstift);
+    test('writes a message with a check mark.', async (): Promise<void> => {
+      const stop = record();
+
+      buntstift.success('foo');
+
+      const { stdout } = stop();
+
+      assert.that(stripAnsi(stdout)).is.equalTo(`✓ foo\n`);
+    });
+
+    test('writes a message with an ASCII-compatible check mark if UTF8 is not available.', async (): Promise<void> => {
+      const stop = record();
+
+      buntstift.success('foo', { isUtf8Enabled: false });
+
+      const { stdout } = stop();
+
+      assert.that(stripAnsi(stdout)).is.equalTo('+ foo\n');
+    });
+
+    test('writes a stringified message if necessary.', async (): Promise<void> => {
+      const stop = record();
+
+      buntstift.success(23);
+
+      const { stdout } = stop();
+
+      assert.that(stripAnsi(stdout)).is.equalTo(`✓ 23\n`);
+    });
+
+    test('replaces the check mark if a prefix is explicitly given.', async (): Promise<void> => {
+      const stop = record();
+
+      buntstift.success('foo', { prefix: '-' });
+
+      const { stdout } = stop();
+
+      assert.that(stripAnsi(stdout)).is.equalTo('- foo\n');
+    });
+
+    test('does nothing in quiet mode.', async (): Promise<void> => {
+      const stop = record();
+
+      buntstift.success('foo', { isQuietModeEnabled: true });
+
+      const { stdout } = stop();
+
+      assert.that(stdout).is.equalTo('');
     });
   });
 
@@ -302,42 +279,23 @@ suite('buntstift', (): void => {
       assert.that(stripAnsi(stdout)).is.equalTo('- foo\n');
     });
 
-    test('does nothing when --quiet is set.', async (): Promise<void> => {
-      process.argv.push('--quiet');
-
+    test('does nothing in quiet mode.', async (): Promise<void> => {
       const stop = record();
 
-      buntstift.info('foo');
+      buntstift.info('foo', { isQuietModeEnabled: true });
 
       const { stdout } = stop();
 
       assert.that(stdout).is.equalTo('');
-      process.argv.pop();
-    });
-
-    test('returns a reference to buntstift.', async (): Promise<void> => {
-      assert.that(buntstift.info('foo')).is.sameAs(buntstift);
     });
   });
 
   suite('verbose', (): void => {
-    test('returns a reference to buntstift.', async (): Promise<void> => {
-      assert.that(buntstift.verbose('foo')).is.sameAs(buntstift);
-    });
-
-    suite('with --verbose set', (): void => {
-      setup(async (): Promise<void> => {
-        process.argv.push('--verbose');
-      });
-
-      teardown(async (): Promise<void> => {
-        process.argv.pop();
-      });
-
+    suite('in verbose mode', (): void => {
       test('writes a message in gray to stdout.', async (): Promise<void> => {
         const stop = record();
 
-        buntstift.verbose('foo');
+        buntstift.verbose('foo', { isVerboseModeEnabled: true });
 
         const { stdout } = stop();
 
@@ -347,7 +305,7 @@ suite('buntstift', (): void => {
       test('writes a message with indentation.', async (): Promise<void> => {
         const stop = record();
 
-        buntstift.verbose('foo');
+        buntstift.verbose('foo', { isVerboseModeEnabled: true });
 
         const { stdout } = stop();
 
@@ -357,7 +315,7 @@ suite('buntstift', (): void => {
       test('writes a stringified message if necessary.', async (): Promise<void> => {
         const stop = record();
 
-        buntstift.verbose(23);
+        buntstift.verbose(23, { isVerboseModeEnabled: true });
 
         const { stdout } = stop();
 
@@ -367,28 +325,25 @@ suite('buntstift', (): void => {
       test('prints the explicitly given prefix.', async (): Promise<void> => {
         const stop = record();
 
-        buntstift.verbose('foo', { prefix: '-' });
+        buntstift.verbose('foo', { prefix: '-', isVerboseModeEnabled: true });
 
         const { stdout } = stop();
 
         assert.that(stripAnsi(stdout)).is.equalTo('- foo\n');
       });
 
-      test('does nothing when --quiet is set.', async (): Promise<void> => {
-        process.argv.push('--quiet');
-
+      test('does nothing in quiet mode.', async (): Promise<void> => {
         const stop = record();
 
-        buntstift.verbose('foo');
+        buntstift.verbose('foo', { isVerboseModeEnabled: true, isQuietModeEnabled: true });
 
         const { stdout } = stop();
 
         assert.that(stdout).is.equalTo('');
-        process.argv.pop();
       });
     });
 
-    suite('without --verbose set', (): void => {
+    suite('in non-verbose mode', (): void => {
       test('does not write a message to stdout.', async (): Promise<void> => {
         const stop = record();
 
@@ -401,206 +356,7 @@ suite('buntstift', (): void => {
     });
   });
 
-  suite('passThrough', (): void => {
-    test('writes a message with indentation.', async (): Promise<void> => {
-      const stop = record();
-
-      buntstift.passThrough('foo\n');
-
-      const { stdout } = stop();
-
-      assert.that(stdout).is.equalTo('  foo\n');
-    });
-
-    test('writes a stringified message if necessary.', async (): Promise<void> => {
-      const stop = record();
-
-      buntstift.passThrough(23);
-
-      const { stdout } = stop();
-
-      assert.that(stdout).is.equalTo('  23');
-    });
-
-    test('writes to stderr if necessary.', async (): Promise<void> => {
-      const stop = record();
-
-      buntstift.passThrough('foo\n', { target: 'stderr' });
-
-      const { stdout, stderr } = stop();
-
-      assert.that(stdout).is.equalTo('');
-      assert.that(stderr).is.equalTo('  foo\n');
-    });
-
-    test('replaces the check mark if a prefix is explicitly given.', async (): Promise<void> => {
-      const stop = record();
-
-      buntstift.passThrough('foo\n', { prefix: '-' });
-
-      const { stdout } = stop();
-
-      assert.that(stdout).is.equalTo('- foo\n');
-    });
-
-    test('does nothing when --quiet is set.', async (): Promise<void> => {
-      process.argv.push('--quiet');
-
-      const stop = record();
-
-      buntstift.passThrough('foo\n');
-
-      const { stdout } = stop();
-
-      assert.that(stdout).is.equalTo('');
-      process.argv.pop();
-    });
-
-    test('ignores --quiet for stderr.', async (): Promise<void> => {
-      process.argv.push('--quiet');
-
-      const stop = record();
-
-      buntstift.passThrough('foo\n', { target: 'stderr' });
-
-      const { stdout, stderr } = stop();
-
-      assert.that(stdout).is.equalTo('');
-      assert.that(stderr).is.equalTo('  foo\n');
-      process.argv.pop();
-    });
-
-    test('returns a reference to buntstift.', async (): Promise<void> => {
-      assert.that(buntstift.passThrough('foo')).is.sameAs(buntstift);
-    });
-  });
-
-  suite('header', (): void => {
-    test('writes a headline with a right pointing arrow.', async (): Promise<void> => {
-      const stop = record();
-
-      buntstift.header('foo');
-
-      const { stdout } = stop();
-
-      assert.that(stripAnsi(stdout)).is.equalTo(`${'\u2500'.repeat(process.stdout.columns || 80)}\n${unicode.utf8.rightPointingPointer} foo\n${'\u2500'.repeat(process.stdout.columns || 80)}\n`);
-    });
-
-    test('writes a headline with an ASCII-compatible right pointing arrow if --no-utf is set.', async (): Promise<void> => {
-      buntstift.noUtf();
-
-      const stop = record();
-
-      buntstift.header('foo');
-
-      const { stdout } = stop();
-
-      assert.that(stripAnsi(stdout)).is.equalTo(`${'\u2500'.repeat(process.stdout.columns || 80)}\n> foo\n${'\u2500'.repeat(process.stdout.columns || 80)}\n`);
-      buntstift.forceUtf();
-    });
-
-    test('writes a stringified headline if necessary.', async (): Promise<void> => {
-      const stop = record();
-
-      buntstift.header(23);
-
-      const { stdout } = stop();
-
-      assert.that(stripAnsi(stdout)).is.equalTo(`${'\u2500'.repeat(process.stdout.columns || 80)}\n${unicode.utf8.rightPointingPointer} 23\n${'\u2500'.repeat(process.stdout.columns || 80)}\n`);
-    });
-
-    test('replaces the right pointing pointer if a prefix is explicitly given.', async (): Promise<void> => {
-      const stop = record();
-
-      buntstift.header('foo', { prefix: '-' });
-
-      const { stdout } = stop();
-
-      assert.that(stripAnsi(stdout)).is.equalTo(`${'\u2500'.repeat(process.stdout.columns || 80)}\n- foo\n${'\u2500'.repeat(process.stdout.columns || 80)}\n`);
-    });
-
-    test('does nothing when --quiet is set.', async (): Promise<void> => {
-      process.argv.push('--quiet');
-
-      const stop = record();
-
-      buntstift.header('foo');
-
-      const { stdout } = stop();
-
-      assert.that(stdout).is.equalTo('');
-      process.argv.pop();
-    });
-
-    test('returns a reference to buntstift.', async (): Promise<void> => {
-      assert.that(buntstift.header('foo')).is.sameAs(buntstift);
-    });
-  });
-
-  suite('list', (): void => {
-    test('writes a message with a leading dash.', async (): Promise<void> => {
-      const stop = record();
-
-      buntstift.list('foo');
-
-      const { stdout } = stop();
-
-      assert.that(stripAnsi(stdout)).is.equalTo(`${unicode.utf8.multiplicationDot} foo\n`);
-    });
-
-    test('writes a message with an ASCII-compatible dash if --no-utf is set.', async (): Promise<void> => {
-      buntstift.noUtf();
-
-      const stop = record();
-
-      buntstift.list('foo');
-
-      const { stdout } = stop();
-
-      assert.that(stripAnsi(stdout)).is.equalTo('- foo\n');
-      buntstift.forceUtf();
-    });
-
-    test('writes an indented message.', async (): Promise<void> => {
-      const stop = record();
-
-      buntstift.list('foo', { indent: 1 });
-
-      const { stdout } = stop();
-
-      assert.that(stripAnsi(stdout)).is.equalTo(`  ${unicode.utf8.multiplicationDot} foo\n`);
-    });
-
-    test('writes an indented message with level 2.', async (): Promise<void> => {
-      const stop = record();
-
-      buntstift.list('foo', { indent: 2 });
-
-      const { stdout } = stop();
-
-      assert.that(stripAnsi(stdout)).is.equalTo(`    ${unicode.utf8.multiplicationDot} foo\n`);
-    });
-
-    test('correctly indents even for multiple prefix characters.', async (): Promise<void> => {
-      const stop = record();
-
-      buntstift.list('foo', { prefix: '--', indent: 1 });
-
-      const { stdout } = stop();
-
-      assert.that(stripAnsi(stdout)).is.equalTo('   -- foo\n');
-    });
-
-    test('returns a reference to buntstift.', async (): Promise<void> => {
-      assert.that(buntstift.list('foo')).is.sameAs(buntstift);
-    });
-  });
-
   suite('line', (): void => {
-    test('returns a reference to buntstift.', async (): Promise<void> => {
-      assert.that(buntstift.line()).is.sameAs(buntstift);
-    });
-
     test('writes a line in gray to stdout.', async (): Promise<void> => {
       const stop = record();
 
@@ -618,23 +374,146 @@ suite('buntstift', (): void => {
 
       const { stdout } = stop();
 
-      const line = '\u2500'.repeat(process.stdout.columns || 80);
+      const line = '─'.repeat(process.stdout.columns || 80);
 
       assert.that(stripAnsi(stdout)).is.equalTo(`${line}\n`);
     });
 
-    test('shows nothing when --quiet is set.', async (): Promise<void> => {
-      process.argv.push('--quiet');
-
+    test('shows nothing in quiet mode.', async (): Promise<void> => {
       const stop = record();
 
-      buntstift.line();
+      buntstift.line({ isQuietModeEnabled: true });
 
       const { stdout, stderr } = stop();
 
       assert.that(stdout).is.equalTo('');
       assert.that(stderr).is.equalTo('');
-      process.argv.pop();
+    });
+  });
+
+  suite('header', (): void => {
+    test('writes a headline with a right pointing arrow.', async (): Promise<void> => {
+      const stop = record();
+
+      buntstift.header('foo');
+
+      const { stdout } = stop();
+
+      assert.that(stripAnsi(stdout)).is.equalTo(`${'─'.repeat(process.stdout.columns || 80)}\n▻ foo\n${'─'.repeat(process.stdout.columns || 80)}\n`);
+    });
+
+    test('writes a headline with an ASCII-compatible right pointing arrow if UTF8 is not available.', async (): Promise<void> => {
+      const stop = record();
+
+      buntstift.header('foo', { isUtf8Enabled: false });
+
+      const { stdout } = stop();
+
+      assert.that(stripAnsi(stdout)).is.equalTo(`${'─'.repeat(process.stdout.columns || 80)}\n> foo\n${'─'.repeat(process.stdout.columns || 80)}\n`);
+    });
+
+    test('writes a stringified headline if necessary.', async (): Promise<void> => {
+      const stop = record();
+
+      buntstift.header(23);
+
+      const { stdout } = stop();
+
+      assert.that(stripAnsi(stdout)).is.equalTo(`${'─'.repeat(process.stdout.columns || 80)}\n▻ 23\n${'─'.repeat(process.stdout.columns || 80)}\n`);
+    });
+
+    test('replaces the right pointing pointer if a prefix is explicitly given.', async (): Promise<void> => {
+      const stop = record();
+
+      buntstift.header('foo', { prefix: '-' });
+
+      const { stdout } = stop();
+
+      assert.that(stripAnsi(stdout)).is.equalTo(`${'─'.repeat(process.stdout.columns || 80)}\n- foo\n${'─'.repeat(process.stdout.columns || 80)}\n`);
+    });
+
+    test('does nothing in quiet mode.', async (): Promise<void> => {
+      const stop = record();
+
+      buntstift.header('foo', { isQuietModeEnabled: true });
+
+      const { stdout } = stop();
+
+      assert.that(stdout).is.equalTo('');
+    });
+  });
+
+  suite('newLine', (): void => {
+    test('writes a blank line to stdout.', async (): Promise<void> => {
+      const stop = record();
+
+      buntstift.newLine();
+
+      const { stdout } = stop();
+
+      assert.that(stdout).is.equalTo('\n');
+    });
+
+    test('does nothing in quiet mode.', async (): Promise<void> => {
+      const stop = record();
+
+      buntstift.newLine({ isQuietModeEnabled: true });
+
+      const { stdout } = stop();
+
+      assert.that(stdout).is.equalTo('');
+    });
+  });
+
+  suite('list', (): void => {
+    test('writes a message with a leading dash.', async (): Promise<void> => {
+      const stop = record();
+
+      buntstift.list('foo');
+
+      const { stdout } = stop();
+
+      assert.that(stripAnsi(stdout)).is.equalTo(`∙ foo\n`);
+    });
+
+    test('writes a message with an ASCII-compatible dash if UTF8 is not available.', async (): Promise<void> => {
+      const stop = record();
+
+      buntstift.list('foo', { isUtf8Enabled: false });
+
+      const { stdout } = stop();
+
+      assert.that(stripAnsi(stdout)).is.equalTo('- foo\n');
+    });
+
+    test('writes an indented message.', async (): Promise<void> => {
+      const stop = record();
+
+      buntstift.list('foo', { level: 1 });
+
+      const { stdout } = stop();
+
+      assert.that(stripAnsi(stdout)).is.equalTo(`  ∙ foo\n`);
+    });
+
+    test('writes an indented message with level 2.', async (): Promise<void> => {
+      const stop = record();
+
+      buntstift.list('foo', { level: 2 });
+
+      const { stdout } = stop();
+
+      assert.that(stripAnsi(stdout)).is.equalTo(`    ∙ foo\n`);
+    });
+
+    test('correctly indents even for multiple prefix characters.', async (): Promise<void> => {
+      const stop = record();
+
+      buntstift.list('foo', { prefix: '--', level: 1 });
+
+      const { stdout } = stop();
+
+      assert.that(stripAnsi(stdout)).is.equalTo('   -- foo\n');
     });
   });
 
@@ -643,8 +522,8 @@ suite('buntstift', (): void => {
       const stop = record();
 
       buntstift.table([
-        [ 'foo', 'bar', 'baz' ]
-      ]);
+        { first: 'foo', second: 'bar', third: 'baz' }
+      ], { showHeader: false });
 
       const { stdout } = stop();
 
@@ -655,167 +534,101 @@ suite('buntstift', (): void => {
       const stop = record();
 
       buntstift.table([
-        [ 'foo', 'bar', 'baz' ],
-        [ 'bar', 'baz', 'foo' ]
-      ]);
+        { first: 'foo', second: 'bar', third: 'baz' },
+        { first: 'bar', second: 'baz', third: 'foo' }
+      ], { showHeader: false });
 
       const { stdout } = stop();
 
-      assert.that(stripAnsi(stdout)).is.equalTo('  foo  bar  baz\n  bar  baz  foo\n');
+      assert.that(stripAnsi(stdout)).is.equalTo([
+        '  foo  bar  baz\n',
+        '  bar  baz  foo\n'
+      ].join(''));
     });
 
     test('pads cells.', async (): Promise<void> => {
       const stop = record();
 
       buntstift.table([
-        [ 'fooA', 'bar', 'baz' ],
-        [ 'bar', 'baz', 'fooB' ]
-      ]);
+        { first: 'fooA', second: 'bar', third: 'baz' },
+        { first: 'bar', second: 'baz', third: 'fooB' }
+      ], { showHeader: false });
 
       const { stdout } = stop();
 
-      assert.that(stripAnsi(stdout)).is.equalTo('  fooA  bar  baz \n  bar   baz  fooB\n');
+      assert.that(stripAnsi(stdout)).is.equalTo([
+        '  fooA  bar  baz \n',
+        '  bar   baz  fooB\n'
+      ].join(''));
     });
 
     test('inserts a separator line.', async (): Promise<void> => {
       const stop = record();
 
       buntstift.table([
-        [ 'A', 'B', 'C' ],
-        [],
-        [ 'fooA', 'bar', 'baz' ],
-        [ 'bar', 'baz', 'fooB' ]
+        { first: 'fooA', second: 'bar', third: 'baz' },
+        { first: 'bar', second: 'baz', third: 'fooB' }
       ]);
 
       const { stdout } = stop();
 
       assert.that(stripAnsi(stdout)).is.equalTo([
-        '  A     B    C   \n',
-        '  \u2500\u2500\u2500\u2500  \u2500\u2500\u2500  \u2500\u2500\u2500\u2500\n',
-        '  fooA  bar  baz \n',
-        '  bar   baz  fooB\n'
+        '  First  Second  Third\n',
+        '  ─────  ──────  ─────\n',
+        '  fooA   bar     baz  \n',
+        '  bar    baz     fooB \n'
       ].join(''));
     });
 
-    test('inserts a separator line with ASCII-compatible dashes if --no-utf is set.', async (): Promise<void> => {
-      buntstift.noUtf();
-
+    test('inserts a separator line with ASCII-compatible dashes if UTF8 is not available.', async (): Promise<void> => {
       const stop = record();
 
       buntstift.table([
-        [ 'A', 'B', 'C' ],
-        [],
-        [ 'fooA', 'bar', 'baz' ],
-        [ 'bar', 'baz', 'fooB' ]
-      ]);
+        { first: 'fooA', second: 'bar', third: 'baz' },
+        { first: 'bar', second: 'baz', third: 'fooB' }
+      ], { isUtf8Enabled: false });
 
       const { stdout } = stop();
 
       assert.that(stripAnsi(stdout)).is.equalTo([
-        '  A     B    C   \n',
-        '  ----  ---  ----\n',
-        '  fooA  bar  baz \n',
-        '  bar   baz  fooB\n'
+        '  First  Second  Third\n',
+        '  -----  ------  -----\n',
+        '  fooA   bar     baz  \n',
+        '  bar    baz     fooB \n'
       ].join(''));
-      buntstift.forceUtf();
-    });
-
-    test('returns a reference to buntstift.', async (): Promise<void> => {
-      assert.that(buntstift.table([[ 'foo' ]])).is.sameAs(buntstift);
     });
   });
 
-  suite('wait', (): void => {
-    test('shows a waiting indicator on stderr.', async (): Promise<void> => {
-      const oldIsTTY = process.stdout.isTTY;
-
-      process.stdout.isTTY = true;
-
+  suite('raw', (): void => {
+    test('writes the given message as is.', async (): Promise<void> => {
       const stop = record();
-      const stopWaiting = buntstift.wait();
 
-      await sleep(0.2 * 1000);
-      stopWaiting();
+      buntstift.raw('foo\n');
+
+      const { stdout } = stop();
+
+      assert.that(stdout).is.equalTo('foo\n');
+    });
+
+    test('writes a stringified message if necessary.', async (): Promise<void> => {
+      const stop = record();
+
+      buntstift.raw(23);
+
+      const { stdout } = stop();
+
+      assert.that(stdout).is.equalTo('23');
+    });
+
+    test('writes to stderr if necessary.', async (): Promise<void> => {
+      const stop = record();
+
+      buntstift.raw('foo\n', { target: 'stderr' });
 
       const { stdout, stderr } = stop();
 
       assert.that(stdout).is.equalTo('');
-      assert.that(stderr).is.not.equalTo('');
-
-      process.stdout.isTTY = oldIsTTY;
-    });
-
-    test('shows nothing when the application is not in interactive mode.', async (): Promise<void> => {
-      const stop = record();
-      const stopWaiting = buntstift.wait();
-
-      await sleep(0.2 * 1000);
-      stopWaiting();
-
-      const { stdout, stderr } = stop();
-
-      assert.that(stdout).is.equalTo('');
-      assert.that(stderr).is.equalTo('');
-      process.argv.pop();
-    });
-
-    test('shows nothing when --quiet is set.', async (): Promise<void> => {
-      process.argv.push('--quiet');
-
-      const stop = record();
-      const stopWaiting = buntstift.wait();
-
-      await sleep(0.2 * 1000);
-      stopWaiting();
-
-      const { stdout, stderr } = stop();
-
-      assert.that(stdout).is.equalTo('');
-      assert.that(stderr).is.equalTo('');
-      process.argv.pop();
-    });
-  });
-
-  suite('option aliases', (): void => {
-    suite('-v', (): void => {
-      setup(async (): Promise<void> => {
-        process.argv.push('-v');
-      });
-
-      teardown(async (): Promise<void> => {
-        process.argv.pop();
-      });
-
-      test('is same as --verbose.', async (): Promise<void> => {
-        const stop = record();
-
-        buntstift.verbose('foo');
-
-        const { stdout } = stop();
-
-        assert.that(stripAnsi(stdout)).is.equalTo('  foo\n');
-      });
-    });
-
-    suite('-q', (): void => {
-      setup(async (): Promise<void> => {
-        process.argv.push('-q');
-      });
-
-      teardown(async (): Promise<void> => {
-        process.argv.pop();
-      });
-
-      test('is same as --quiet.', async (): Promise<void> => {
-        const stop = record();
-
-        buntstift.info('foo');
-
-        const { stdout, stderr } = stop();
-
-        assert.that(stdout).is.equalTo('');
-        assert.that(stderr).is.equalTo('');
-      });
+      assert.that(stderr).is.equalTo('foo\n');
     });
   });
 });
