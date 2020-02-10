@@ -1,3 +1,16 @@
+# [4.0.0](https://github.com/thenativeweb/buntstift/compare/3.1.0...4.0.0) (2020-02-10)
+
+
+### Features
+
+* Rewrite from scratch. ([#107](https://github.com/thenativeweb/buntstift/issues/107)) ([a1103e6](https://github.com/thenativeweb/buntstift/commit/a1103e6db89e8cecbddd50229083829578112903))
+* Trigger release. ([#108](https://github.com/thenativeweb/buntstift/issues/108)) ([cf95e20](https://github.com/thenativeweb/buntstift/commit/cf95e20a75016a9e8917881a20160063cabd5817))
+
+
+### BREAKING CHANGES
+
+* Buntstift was rewritten from scratch, and most of its APIs have more or less changed.
+
 # [3.1.0](https://github.com/thenativeweb/buntstift/compare/3.0.4...3.1.0) (2020-01-27)
 
 
