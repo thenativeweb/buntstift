@@ -18,6 +18,23 @@ suite('Configuration', (): void => {
     assert.that(configuration.isVerboseModeEnabled).is.true();
   });
 
+  suite('clone', (): void => {
+    test('returns a cloned configuration.', async (): Promise<void> => {
+      const configuration = new Configuration({
+        isColorEnabled: true,
+        isInteractiveSession: false,
+        isQuietModeEnabled: true,
+        isUtf8Enabled: false,
+        isVerboseModeEnabled: true
+      });
+
+      const clonedConfiguration = configuration.clone();
+
+      assert.that(clonedConfiguration).is.equalTo(configuration);
+      assert.that(clonedConfiguration).is.not.sameAs(configuration);
+    });
+  });
+
   suite('withColor', (): void => {
     test('enables color mode if set to true.', async (): Promise<void> => {
       const configuration = new Configuration({

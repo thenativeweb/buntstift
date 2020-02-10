@@ -6,11 +6,11 @@ import { ListOptions } from './ListOptions';
 import { Message } from './Message';
 import { MessageType } from './MessageType';
 import { ModeOptions } from './ModeOptions';
+import { noop } from './noop';
 import ora from 'ora';
 import { PrefixOptions } from './PrefixOptions';
 import { RawOptions } from './RawOptions';
 import { TableOptions } from './TableOptions';
-import { cloneDeep, noop } from 'lodash';
 
 class Buntstift {
   private configuration: Configuration;
@@ -51,35 +51,19 @@ class Buntstift {
   }
 
   protected isInteractiveSession (modeOptions?: ModeOptions): boolean {
-    if (typeof modeOptions?.isInteractiveSession === 'boolean') {
-      return modeOptions.isInteractiveSession;
-    }
-
-    return this.configuration.isInteractiveSession;
+    return modeOptions?.isInteractiveSession ?? this.configuration.isInteractiveSession;
   }
 
   protected isQuietModeEnabled (modeOptions?: ModeOptions): boolean {
-    if (typeof modeOptions?.isQuietModeEnabled === 'boolean') {
-      return modeOptions.isQuietModeEnabled;
-    }
-
-    return this.configuration.isQuietModeEnabled;
+    return modeOptions?.isQuietModeEnabled ?? this.configuration.isQuietModeEnabled;
   }
 
   protected isUtf8Enabled (modeOptions?: ModeOptions): boolean {
-    if (typeof modeOptions?.isUtf8Enabled === 'boolean') {
-      return modeOptions.isUtf8Enabled;
-    }
-
-    return this.configuration.isUtf8Enabled;
+    return modeOptions?.isUtf8Enabled ?? this.configuration.isUtf8Enabled;
   }
 
   protected isVerboseModeEnabled (modeOptions?: ModeOptions): boolean {
-    if (typeof modeOptions?.isVerboseModeEnabled === 'boolean') {
-      return modeOptions.isVerboseModeEnabled;
-    }
-
-    return this.configuration.isVerboseModeEnabled;
+    return modeOptions?.isVerboseModeEnabled ?? this.configuration.isVerboseModeEnabled;
   }
 
   protected static pauseSpinner (): () => void {
@@ -110,7 +94,7 @@ class Buntstift {
   }
 
   public getConfiguration (): Configuration {
-    return cloneDeep(this.configuration);
+    return this.configuration.clone();
   }
 
   public wait (options?: ModeOptions): () => void {

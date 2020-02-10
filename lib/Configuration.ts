@@ -1,5 +1,3 @@
-import { cloneDeep } from 'lodash';
-
 class Configuration {
   public isColorEnabled: boolean;
 
@@ -31,8 +29,20 @@ class Configuration {
     this.isVerboseModeEnabled = isVerboseModeEnabled;
   }
 
+  public clone (): Configuration {
+    const clonedConfiguration = new Configuration({
+      isColorEnabled: this.isColorEnabled,
+      isInteractiveSession: this.isInteractiveSession,
+      isQuietModeEnabled: this.isQuietModeEnabled,
+      isUtf8Enabled: this.isUtf8Enabled,
+      isVerboseModeEnabled: this.isVerboseModeEnabled
+    });
+
+    return clonedConfiguration;
+  }
+
   public withColor (isColorEnabled: boolean): Configuration {
-    const newConfiguration = cloneDeep(this);
+    const newConfiguration = this.clone();
 
     newConfiguration.isColorEnabled = isColorEnabled;
 
@@ -40,7 +50,7 @@ class Configuration {
   }
 
   public withInteractiveSession (isInteractiveSession: boolean): Configuration {
-    const newConfiguration = cloneDeep(this);
+    const newConfiguration = this.clone();
 
     newConfiguration.isInteractiveSession = isInteractiveSession;
 
@@ -48,7 +58,7 @@ class Configuration {
   }
 
   public withQuietMode (isQuietModeEnabled: boolean): Configuration {
-    const newConfiguration = cloneDeep(this);
+    const newConfiguration = this.clone();
 
     newConfiguration.isQuietModeEnabled = isQuietModeEnabled;
 
@@ -56,7 +66,7 @@ class Configuration {
   }
 
   public withUtf8 (isUtf8Enabled: boolean): Configuration {
-    const newConfiguration = cloneDeep(this);
+    const newConfiguration = this.clone();
 
     newConfiguration.isUtf8Enabled = isUtf8Enabled;
 
@@ -64,7 +74,7 @@ class Configuration {
   }
 
   public withVerboseMode (isVerboseModeEnabled: boolean): Configuration {
-    const newConfiguration = cloneDeep(this);
+    const newConfiguration = this.clone();
 
     newConfiguration.isVerboseModeEnabled = isVerboseModeEnabled;
 

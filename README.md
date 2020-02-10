@@ -79,7 +79,7 @@ buntstift.success('Server started on port 3000.', { prefix: 'OK' });
 
 ### Configuring buntstift
 
-By default, buntstift tries to use reasonable defaults. However, sometimes you may need to change its configuration. For that, first use the `getConfiguration` function to get the current configuration:
+Without any manual configuration, buntstift tries to use reasonable defaults. However, sometimes you may need to change its configuration. For that, first use the `getConfiguration` function to get the current configuration:
 
 ```javascript
 const configuration = buntstift.getConfiguration();
@@ -93,7 +93,7 @@ const updatedConfiguration = configuration.withColor(false);
 
 *Please note that all of the functions on the configuration object do not mutate the configuration, but return a new instance instead!*
 
-Finally, set the new configuration using the `configure` function. Typically, because of the configuration object's immutability, you may want to do all of this in a single line:
+Finally, set the new configuration using the `configure` function. Typically, because of the configuration object's immutability, you may want to do all of this in a single statement:
 
 ```javascript
 buntstift.configure(
@@ -129,7 +129,7 @@ const updatedConfiguration = configuration.withQuietMode(true);
 
 #### Enabling or disabling UTF8
 
-By default, buntstift uses some UTF8 insteaf of simple ASCII characters. To enable or disable UTF8, use the `withUtf8` function:
+By default, buntstift uses some UTF8 instead of simple ASCII characters. To enable or disable UTF8, use the `withUtf8` function:
 
 ```javascript
 const updatedConfiguration = configuration.withUtf8(true);
@@ -151,7 +151,7 @@ From time to time, you may want to change the configuration, but limit the effec
 buntstift.success('Server started on port 3000.', { isUtf8Enabled: false });
 ```
 
-You may also the properties `isColorEnabled`, `isInteractiveSession`, `isQuietModeEnabled`, and `isVerboseModeEnabled`.
+You may also pass the properties `isColorEnabled`, `isInteractiveSession`, `isQuietModeEnabled`, and `isVerboseModeEnabled`.
 
 ### Using lines
 
@@ -245,7 +245,7 @@ Besides the various ways to display information, buntstift is also able to get i
 
 #### Asking a question
 
-If you want to ask a question to the user, use `ask` and provide a `question`:
+If you want to ask the user a question, use `ask` and provide a `question`:
 
 ```javascript
 const answer = await buntstift.ask('What do you want to do today?');
