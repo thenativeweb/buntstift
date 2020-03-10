@@ -1,3 +1,10 @@
+## [4.0.3](https://github.com/thenativeweb/buntstift/compare/4.0.2...4.0.3) (2020-03-10)
+
+
+### Bug Fixes
+
+* bump inquirer from 7.0.6 to 7.1.0 ([#131](https://github.com/thenativeweb/buntstift/issues/131)) ([0a47363](https://github.com/thenativeweb/buntstift/commit/0a473634b20046ed28cdac3aa85aaf4ef464aa30))
+
 ## [4.0.2](https://github.com/thenativeweb/buntstift/compare/4.0.1...4.0.2) (2020-03-04)
 
 
