@@ -84,7 +84,7 @@ class Buntstift {
   public configure (configuration: Configuration): void {
     this.configuration = configuration;
 
-    chalk.level = this.configuration.isColorEnabled ? Buntstift.detectedColorLevel : chalk.Level.None;
+    chalk.level = this.configuration.isColorEnabled ? Buntstift.detectedColorLevel : 0;
 
     if (this.configuration.isUtf8Enabled) {
       Buntstift.spinner = ora({ color: 'white', spinner: 'dots' });
