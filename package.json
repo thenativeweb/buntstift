@@ -23,7 +23,7 @@
   "main": "build/lib/buntstift.js",
   "types": "build/lib/buntstift.d.ts",
   "dependencies": {
-    "chalk": "3.0.0",
+    "chalk": "4.0.0",
     "humanize-string": "2.1.0",
     "inquirer": "7.1.0",
     "ora": "4.0.3"
