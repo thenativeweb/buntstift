@@ -1,3 +1,10 @@
+## [4.0.5](https://github.com/thenativeweb/buntstift/compare/4.0.4...4.0.5) (2020-06-10)
+
+
+### Bug Fixes
+
+* bump chalk from 4.0.0 to 4.1.0 ([#155](https://github.com/thenativeweb/buntstift/issues/155)) ([0ad7789](https://github.com/thenativeweb/buntstift/commit/0ad778935f8054f0794e50de2c84c9c168e3af31))
+
 ## [4.0.4](https://github.com/thenativeweb/buntstift/compare/4.0.3...4.0.4) (2020-04-03)
 
 
