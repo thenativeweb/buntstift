@@ -23,17 +23,17 @@
   "main": "build/lib/buntstift.js",
   "types": "build/lib/buntstift.d.ts",
   "dependencies": {
+    "@types/inquirer": "6.5.0",
     "chalk": "4.1.0",
     "humanize-string": "2.1.0",
     "inquirer": "7.1.0",
     "ora": "4.0.3"
   },
   "devDependencies": {
-    "@types/inquirer": "6.5.0",
     "assertthat": "5.1.1",
     "isansi": "2.0.1",
     "record-stdstreams": "3.0.0",
-    "roboter": "11.1.26",
+    "roboter": "11.2.0",
     "semantic-release-configuration": "1.0.20",
     "strip-ansi": "6.0.0"
   },
