@@ -1,6 +1,6 @@
 {
   "name": "buntstift",
-  "version": "4.0.8",
+  "version": "4.0.9",
   "description": "buntstift makes the CLI colorful.",
   "contributors": [
     {
@@ -26,7 +26,7 @@
     "@types/inquirer": "6.5.0",
     "chalk": "4.1.0",
     "humanize-string": "2.1.0",
-    "inquirer": "7.3.1",
+    "inquirer": "7.3.2",
     "ora": "4.0.3"
   },
   "devDependencies": {
