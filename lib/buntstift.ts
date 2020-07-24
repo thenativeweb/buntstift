@@ -17,7 +17,11 @@ class Buntstift {
 
   private static readonly detectedColorLevel = chalk.level;
 
-  private static spinner = ora({ color: 'white', spinner: 'dots' });
+  private static spinner = ora({
+    color: 'white',
+    spinner: 'dots',
+    isEnabled: true
+  });
 
   public constructor () {
     this.configuration = new Configuration({

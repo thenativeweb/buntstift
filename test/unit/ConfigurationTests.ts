@@ -121,7 +121,7 @@ suite('Configuration', (): void => {
         isQuietModeEnabled: true,
         isUtf8Enabled: false,
         isVerboseModeEnabled: true
-      }).withVerboseMode(true);
+      }).withUtf8(true);
 
       assert.that(configuration.isUtf8Enabled).is.true();
     });
@@ -133,7 +133,7 @@ suite('Configuration', (): void => {
         isQuietModeEnabled: true,
         isUtf8Enabled: true,
         isVerboseModeEnabled: true
-      }).withVerboseMode(false);
+      }).withUtf8(false);
 
       assert.that(configuration.isUtf8Enabled).is.false();
     });
