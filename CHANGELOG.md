@@ -1,3 +1,10 @@
+## [4.0.13](https://github.com/thenativeweb/buntstift/compare/4.0.12...4.0.13) (2020-08-06)
+
+
+### Bug Fixes
+
+* bump ora from 4.0.5 to 4.1.0 ([#188](https://github.com/thenativeweb/buntstift/issues/188)) ([1bed0f9](https://github.com/thenativeweb/buntstift/commit/1bed0f9ef1208460be17fa361d6f9a47c0fd7143))
+
 ## [4.0.12](https://github.com/thenativeweb/buntstift/compare/4.0.11...4.0.12) (2020-07-24)
 
 
