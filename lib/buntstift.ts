@@ -2,15 +2,15 @@ import chalk from 'chalk';
 import { Configuration } from './Configuration';
 import humanizeString from 'humanize-string';
 import inquirer from 'inquirer';
-import { ListOptions } from './ListOptions';
-import { Message } from './Message';
-import { MessageType } from './MessageType';
-import { ModeOptions } from './ModeOptions';
+import type { ListOptions } from './ListOptions';
+import type { Message } from './Message';
+import type { MessageType } from './MessageType';
+import type { ModeOptions } from './ModeOptions';
 import { noop } from './noop';
 import ora from 'ora';
-import { PrefixOptions } from './PrefixOptions';
-import { RawOptions } from './RawOptions';
-import { TableOptions } from './TableOptions';
+import type { PrefixOptions } from './PrefixOptions';
+import type { RawOptions } from './RawOptions';
+import type { TableOptions } from './TableOptions';
 
 class Buntstift {
   private configuration: Configuration;
@@ -354,7 +354,7 @@ class Buntstift {
           return true;
         }
       }
-    ]);
+    ]) as { answer: string };
 
     resumeSpinner();
 
@@ -373,7 +373,7 @@ class Buntstift {
         message,
         default: value
       }
-    ]);
+    ]) as { isConfirmed: boolean };
 
     resumeSpinner();
 
@@ -392,7 +392,7 @@ class Buntstift {
         message: question,
         choices
       }
-    ]);
+    ]) as { selection: string };
 
     resumeSpinner();
 
