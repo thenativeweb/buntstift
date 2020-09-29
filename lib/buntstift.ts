@@ -2,15 +2,15 @@ import chalk from 'chalk';
 import { Configuration } from './Configuration';
 import humanizeString from 'humanize-string';
 import inquirer from 'inquirer';
-import type { ListOptions } from './ListOptions';
-import type { Message } from './Message';
-import type { MessageType } from './MessageType';
-import type { ModeOptions } from './ModeOptions';
+import { ListOptions } from './ListOptions';
+import { Message } from './Message';
+import { MessageType } from './MessageType';
+import { ModeOptions } from './ModeOptions';
 import { noop } from './noop';
 import ora from 'ora';
-import type { PrefixOptions } from './PrefixOptions';
-import type { RawOptions } from './RawOptions';
-import type { TableOptions } from './TableOptions';
+import { PrefixOptions } from './PrefixOptions';
+import { RawOptions } from './RawOptions';
+import { TableOptions } from './TableOptions';
 
 class Buntstift {
   private configuration: Configuration;
