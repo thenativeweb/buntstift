@@ -13,7 +13,7 @@ suite('buntstift', (): void => {
       const stop = record();
       const stopWaiting = buntstift.wait({ isInteractiveSession: true });
 
-      await sleep(0.2 * 1000);
+      await sleep(200);
       stopWaiting();
 
       const { stdout, stderr } = stop();
@@ -26,7 +26,7 @@ suite('buntstift', (): void => {
       const stop = record();
       const stopWaiting = buntstift.wait({ isInteractiveSession: false });
 
-      await sleep(0.2 * 1000);
+      await sleep(200);
       stopWaiting();
 
       const { stdout, stderr } = stop();
@@ -39,7 +39,7 @@ suite('buntstift', (): void => {
       const stop = record();
       const stopWaiting = buntstift.wait({ isQuietModeEnabled: true });
 
-      await sleep(0.2 * 1000);
+      await sleep(200);
       stopWaiting();
 
       const { stdout, stderr } = stop();
