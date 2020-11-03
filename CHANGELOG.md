@@ -1,3 +1,10 @@
+## [4.0.17](https://github.com/thenativeweb/buntstift/compare/4.0.16...4.0.17) (2020-11-03)
+
+
+### Bug Fixes
+
+* Fix headline for robot section in readme. ([#245](https://github.com/thenativeweb/buntstift/issues/245)) ([07bcfd9](https://github.com/thenativeweb/buntstift/commit/07bcfd978c1d24bd911ee7737285528b7f3db2b5))
+
 ## [4.0.16](https://github.com/thenativeweb/buntstift/compare/4.0.15...4.0.16) (2020-09-07)
 
 
