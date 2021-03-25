@@ -1,3 +1,10 @@
+## [4.0.22](https://github.com/thenativeweb/buntstift/compare/4.0.21...4.0.22) (2021-03-25)
+
+
+### Bug Fixes
+
+* Migrate from master to main. ([#357](https://github.com/thenativeweb/buntstift/issues/357)) ([e5b3040](https://github.com/thenativeweb/buntstift/commit/e5b30407ab81e7d779e9cc5122c0eefb541372c7))
+
 ## [4.0.21](https://github.com/thenativeweb/buntstift/compare/4.0.20...4.0.21) (2021-03-19)
 
 
