@@ -33,7 +33,7 @@
     "assertthat": "5.2.8",
     "isansi": "2.0.6",
     "record-stdstreams": "3.0.49",
-    "roboter": "11.6.35",
+    "roboter": "11.6.36",
     "semantic-release-configuration": "2.0.0",
     "strip-ansi": "6.0.0"
   },
