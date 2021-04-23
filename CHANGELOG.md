@@ -1,3 +1,10 @@
+## [4.0.23](https://github.com/thenativeweb/buntstift/compare/4.0.22...4.0.23) (2021-04-23)
+
+
+### Bug Fixes
+
+* bump chalk from 4.1.0 to 4.1.1 ([#371](https://github.com/thenativeweb/buntstift/issues/371)) ([6e4a1f6](https://github.com/thenativeweb/buntstift/commit/6e4a1f69a473f95b216b6793af594930bde845d6))
+
 ## [4.0.22](https://github.com/thenativeweb/buntstift/compare/4.0.21...4.0.22) (2021-03-25)
 
 
