@@ -31,7 +31,7 @@ suite('Configuration', (): void => {
       const clonedConfiguration = configuration.clone();
 
       assert.that(clonedConfiguration).is.equalTo(configuration);
-      assert.that(clonedConfiguration).is.not.sameAs(configuration);
+      assert.that(clonedConfiguration).is.not.identicalTo(configuration);
     });
   });
 
