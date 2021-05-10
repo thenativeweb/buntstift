@@ -1,3 +1,10 @@
+## [4.0.24](https://github.com/thenativeweb/buntstift/compare/4.0.23...4.0.24) (2021-05-10)
+
+
+### Bug Fixes
+
+* bump hosted-git-info from 2.8.8 to 2.8.9 ([#382](https://github.com/thenativeweb/buntstift/issues/382)) ([9aebb9a](https://github.com/thenativeweb/buntstift/commit/9aebb9a61184b3e52df0ba9cc6818032dbca5e6f))
+
 ## [4.0.23](https://github.com/thenativeweb/buntstift/compare/4.0.22...4.0.23) (2021-04-23)
 
 
