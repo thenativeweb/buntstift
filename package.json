@@ -1,6 +1,6 @@
 {
   "name": "buntstift",
-  "version": "4.0.24",
+  "version": "4.0.25",
   "description": "buntstift makes the CLI colorful.",
   "contributors": [
     {
@@ -26,14 +26,14 @@
     "@types/inquirer": "7.3.1",
     "chalk": "4.1.1",
     "humanize-string": "2.1.0",
-    "inquirer": "8.0.0",
+    "inquirer": "8.1.0",
     "ora": "5.4.0"
   },
   "devDependencies": {
-    "assertthat": "6.1.1",
+    "assertthat": "6.2.0",
     "isansi": "2.0.8",
     "record-stdstreams": "3.0.55",
-    "roboter": "11.6.42",
+    "roboter": "11.6.48",
     "semantic-release-configuration": "2.0.1",
     "strip-ansi": "6.0.0"
   },
