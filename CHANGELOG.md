@@ -1,3 +1,10 @@
+## [4.0.26](https://github.com/thenativeweb/buntstift/compare/4.0.25...4.0.26) (2021-06-08)
+
+
+### Bug Fixes
+
+* bump glob-parent from 5.1.1 to 5.1.2 ([#401](https://github.com/thenativeweb/buntstift/issues/401)) ([6be8b76](https://github.com/thenativeweb/buntstift/commit/6be8b762d83b6daba9e9ff28cf292c4ee335efab))
+
 ## [4.0.25](https://github.com/thenativeweb/buntstift/compare/4.0.24...4.0.25) (2021-05-24)
 
 
