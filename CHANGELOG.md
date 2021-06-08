@@ -1,3 +1,10 @@
+## [4.0.27](https://github.com/thenativeweb/buntstift/compare/4.0.26...4.0.27) (2021-06-08)
+
+
+### Bug Fixes
+
+* bump trim-newlines from 3.0.0 to 3.0.1 ([#400](https://github.com/thenativeweb/buntstift/issues/400)) ([e8d172b](https://github.com/thenativeweb/buntstift/commit/e8d172bacb5a052b2bc98c537f8d3b8dd6bba846))
+
 ## [4.0.26](https://github.com/thenativeweb/buntstift/compare/4.0.25...4.0.26) (2021-06-08)
 
 
