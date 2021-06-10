@@ -1,3 +1,10 @@
+## [4.0.28](https://github.com/thenativeweb/buntstift/compare/4.0.27...4.0.28) (2021-06-10)
+
+
+### Bug Fixes
+
+* bump normalize-url from 6.0.0 to 6.0.1 ([#402](https://github.com/thenativeweb/buntstift/issues/402)) ([6c5b6a4](https://github.com/thenativeweb/buntstift/commit/6c5b6a4f8f02219f8eff87f4a875192e656de0f4))
+
 ## [4.0.27](https://github.com/thenativeweb/buntstift/compare/4.0.26...4.0.27) (2021-06-08)
 
 
