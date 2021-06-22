@@ -2,7 +2,7 @@
 
 buntstift makes the CLI colorful.
 
-![buntstift](https://github.com/thenativeweb/buntstift/raw/master/images/logo.jpg "buntstift")
+![buntstift](https://github.com/thenativeweb/buntstift/raw/main/images/logo.jpg "buntstift")
 
 ## Status
 
