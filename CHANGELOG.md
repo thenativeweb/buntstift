@@ -1,3 +1,10 @@
+## [4.0.31](https://github.com/thenativeweb/buntstift/compare/4.0.30...4.0.31) (2021-06-28)
+
+
+### Bug Fixes
+
+* bump @types/inquirer from 7.3.1 to 7.3.2 ([#410](https://github.com/thenativeweb/buntstift/issues/410)) ([1b9f9be](https://github.com/thenativeweb/buntstift/commit/1b9f9be7f7ebeb6d72ceb10d62d81d6506190968))
+
 ## [4.0.30](https://github.com/thenativeweb/buntstift/compare/4.0.29...4.0.30) (2021-06-28)
 
 
