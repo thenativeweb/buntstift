@@ -34,7 +34,7 @@
     "isansi": "2.0.10",
     "record-stdstreams": "3.0.61",
     "roboter": "11.7.7",
-    "semantic-release-configuration": "2.0.4",
+    "semantic-release-configuration": "2.0.5",
     "strip-ansi": "6.0.0"
   },
   "repository": {
