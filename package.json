@@ -30,7 +30,7 @@
     "ora": "5.4.1"
   },
   "devDependencies": {
-    "assertthat": "6.3.5",
+    "assertthat": "6.3.6",
     "isansi": "2.0.10",
     "record-stdstreams": "3.0.64",
     "roboter": "11.7.7",
