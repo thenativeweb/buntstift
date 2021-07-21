@@ -1,3 +1,10 @@
+## [4.0.33](https://github.com/thenativeweb/buntstift/compare/4.0.32...4.0.33) (2021-07-21)
+
+
+### Bug Fixes
+
+* bump inquirer from 8.1.1 to 8.1.2 ([#418](https://github.com/thenativeweb/buntstift/issues/418)) ([112dc31](https://github.com/thenativeweb/buntstift/commit/112dc31ed9ba73c23fe25a82b32550c9f4477c1f))
+
 ## [4.0.32](https://github.com/thenativeweb/buntstift/compare/4.0.31...4.0.32) (2021-07-12)
 
 
