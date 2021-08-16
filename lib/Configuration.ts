@@ -1,5 +1,8 @@
+import { ColorLevel } from './ColorLevel';
+import { Level } from 'chalk';
+
 class Configuration {
-  public isColorEnabled: boolean;
+  public colorLevel: ColorLevel;
 
   public isInteractiveSession: boolean;
 
@@ -10,19 +13,19 @@ class Configuration {
   public isVerboseModeEnabled: boolean;
 
   public constructor ({
-    isColorEnabled,
+    colorLevel,
     isInteractiveSession,
     isQuietModeEnabled,
     isUtf8Enabled,
     isVerboseModeEnabled
   }: {
-    isColorEnabled: boolean;
+    colorLevel: ColorLevel;
     isInteractiveSession: boolean;
     isQuietModeEnabled: boolean;
     isUtf8Enabled: boolean;
     isVerboseModeEnabled: boolean;
   }) {
-    this.isColorEnabled = isColorEnabled;
+    this.colorLevel = colorLevel;
     this.isInteractiveSession = isInteractiveSession;
     this.isQuietModeEnabled = isQuietModeEnabled;
     this.isUtf8Enabled = isUtf8Enabled;
@@ -31,7 +34,7 @@ class Configuration {
 
   public clone (): Configuration {
     const clonedConfiguration = new Configuration({
-      isColorEnabled: this.isColorEnabled,
+      colorLevel: this.colorLevel,
       isInteractiveSession: this.isInteractiveSession,
       isQuietModeEnabled: this.isQuietModeEnabled,
       isUtf8Enabled: this.isUtf8Enabled,
@@ -41,10 +44,10 @@ class Configuration {
     return clonedConfiguration;
   }
 
-  public withColor (isColorEnabled: boolean): Configuration {
+  public withColorLevel (colorLevel: Level): Configuration {
     const newConfiguration = this.clone();
 
-    newConfiguration.isColorEnabled = isColorEnabled;
+    newConfiguration.colorLevel = colorLevel;
 
     return newConfiguration;
   }

@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import { ColorLevel } from './ColorLevel';
 import { Configuration } from './Configuration';
 import humanizeString from 'humanize-string';
 import inquirer from 'inquirer';
@@ -15,7 +16,7 @@ import { TableOptions } from './TableOptions';
 class Buntstift {
   private configuration: Configuration;
 
-  private static readonly detectedColorLevel = chalk.level;
+  private static readonly detectedColorLevel: ColorLevel = chalk.level;
 
   private static spinner = ora({
     color: 'white',
@@ -25,7 +26,7 @@ class Buntstift {
 
   public constructor () {
     this.configuration = new Configuration({
-      isColorEnabled: true,
+      colorLevel: Buntstift.detectedColorLevel,
       isInteractiveSession: process.stdout.isTTY,
       isQuietModeEnabled: false,
       isUtf8Enabled: true,
@@ -77,7 +78,6 @@ class Buntstift {
 
     Buntstift.spinner.stop();
 
-    // eslint-disable-next-line unicorn/consistent-function-scoping
     const resume = (): void => {
       Buntstift.spinner.start();
     };
@@ -88,12 +88,12 @@ class Buntstift {
   public configure (configuration: Configuration): void {
     this.configuration = configuration;
 
-    chalk.level = this.configuration.isColorEnabled ? Buntstift.detectedColorLevel : 0;
+    chalk.level = this.configuration.colorLevel;
 
     if (this.configuration.isUtf8Enabled) {
-      Buntstift.spinner = ora({ color: 'white', spinner: 'dots' });
+      Buntstift.spinner.spinner = 'dots';
     } else {
-      Buntstift.spinner = ora({ color: 'white', spinner: 'line' });
+      Buntstift.spinner.spinner = 'line';
     }
   }
 
@@ -108,7 +108,6 @@ class Buntstift {
 
     Buntstift.spinner.start();
 
-    // eslint-disable-next-line unicorn/consistent-function-scoping
     const stop = (): void => {
       Buntstift.spinner.stop();
     };
@@ -334,10 +333,8 @@ class Buntstift {
       mask = undefined;
     } else {
       defaultValue = options?.default;
-      /* eslint-disable prefer-destructuring */
       echo = options?.echo ?? true;
       mask = options?.mask;
-      /* eslint-enable prefer-destructuring */
     }
 
     const { answer } = await inquirer.prompt([
@@ -403,4 +400,4 @@ class Buntstift {
 
 const buntstift = new Buntstift();
 
-export { buntstift };
+export { buntstift, ColorLevel };
