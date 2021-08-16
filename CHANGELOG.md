@@ -1,3 +1,29 @@
+# [5.0.0](https://github.com/thenativeweb/buntstift/compare/4.0.34...5.0.0) (2021-08-16)
+
+
+### Bug Fixes
+
+* bump path-parse from 1.0.6 to 1.0.7 ([#428](https://github.com/thenativeweb/buntstift/issues/428)) ([3097384](https://github.com/thenativeweb/buntstift/commit/30973841b66e25b4c98255db168c2598efd28ef6))
+
+
+### Features
+
+* Allow setting color level. ([#429](https://github.com/thenativeweb/buntstift/issues/429)) ([0517b5a](https://github.com/thenativeweb/buntstift/commit/0517b5a21b30b6a13cc7161f0e2e251f9cd1da2b))
+
+
+### BREAKING CHANGES
+
+* This removes the previous boolean configuration value isColorEnabled in
+favor of a more flexible colorLevel. Disabling colored output is still
+possible by setting the colorLevel to ColorLevel.Disabled. In addition,
+the color level can now be controlled in detail.
+
+* feat: Export ColorLevel in the entrypoint.
+
+* chore: Update github actions to use node v16.
+
+* chore: Add missing configuration files.
+
 ## [4.0.34](https://github.com/thenativeweb/buntstift/compare/4.0.33...4.0.34) (2021-08-02)
 
 
