@@ -400,4 +400,4 @@ class Buntstift {
 
 const buntstift = new Buntstift();
 
-export { buntstift };
+export { buntstift, ColorLevel };
