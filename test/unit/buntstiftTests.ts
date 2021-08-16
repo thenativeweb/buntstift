@@ -1,5 +1,6 @@
 import { assert } from 'assertthat';
 import { buntstift } from '../../lib/buntstift';
+import { ColorLevel } from '../../lib/ColorLevel';
 import { isAnsi } from 'isansi';
 import { promisify } from 'util';
 import { record } from 'record-stdstreams';
@@ -8,6 +9,14 @@ import stripAnsi from 'strip-ansi';
 const sleep = promisify(setTimeout);
 
 suite('buntstift', (): void => {
+  setup(async (): Promise<void> => {
+    buntstift.configure(
+      buntstift.
+        getConfiguration().
+        withColorLevel(ColorLevel.Ansi)
+    );
+  });
+
   suite('wait', (): void => {
     test('shows a waiting indicator on stderr in interactive sessions.', async (): Promise<void> => {
       const stop = record();

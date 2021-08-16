@@ -85,10 +85,10 @@ Without any manual configuration, buntstift tries to use reasonable defaults. Ho
 const configuration = buntstift.getConfiguration();
 ```
 
-The configuration object now has a number of functions (see section below) to adjust the configuration. E.g., to disable colors, call the `withColor` function and hand over `false` as parameter:
+The configuration object now has a number of functions (see section below) to adjust the configuration. E.g., to disable colors, call the `withColorLevel` function and hand over `ColorLevel.Disabled` as parameter:
 
 ```javascript
-const updatedConfiguration = configuration.withColor(false);
+const updatedConfiguration = configuration.withColorLevel(ColorLevel.Disabled);
 ```
 
 *Please note that all of the functions on the configuration object do not mutate the configuration, but return a new instance instead!*
@@ -98,18 +98,21 @@ Finally, set the new configuration using the `configure` function. Typically, be
 ```javascript
 buntstift.configure(
   buntstift.getConfiguration().
-    withColor(false).
+    withColorLevel(ColorLevel.Disabled).
     withUtf8(false)
 );
 ```
 
-#### Enabling or disabling colors
+#### Setting the colors level
 
-By default, buntstift uses colors to show its messages. To explicitly enable or disable colors, use the `withColor` function:
+By default, buntstift uses colors to show its messages. To explicitly disable colors or set a specific color level, use the `withColorLevel` function:
 
 ```javascript
-const updatedConfiguration = configuration.withColor(true);
+const updatedConfiguration = configuration.withColorLevel(ColorLevel.Disabled);
+const updatedConfiguration = configuration.withColorLevel(ColorLevel.Ansi);
 ```
+
+See the [`ColorLevel`](./lib/ColorLevel.ts) enum for all possible values.
 
 #### Enabling or disabling interactive sessions
 

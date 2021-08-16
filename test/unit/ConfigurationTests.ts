@@ -1,17 +1,18 @@
 import { assert } from 'assertthat';
+import { ColorLevel } from '../../lib/ColorLevel';
 import { Configuration } from '../../lib/Configuration';
 
 suite('Configuration', (): void => {
   test('uses the given values.', async (): Promise<void> => {
     const configuration = new Configuration({
-      isColorEnabled: true,
+      colorLevel: ColorLevel.Ansi,
       isInteractiveSession: false,
       isQuietModeEnabled: true,
       isUtf8Enabled: false,
       isVerboseModeEnabled: true
     });
 
-    assert.that(configuration.isColorEnabled).is.true();
+    assert.that(configuration.colorLevel).is.equalTo(ColorLevel.Ansi);
     assert.that(configuration.isInteractiveSession).is.false();
     assert.that(configuration.isQuietModeEnabled).is.true();
     assert.that(configuration.isUtf8Enabled).is.false();
@@ -21,7 +22,7 @@ suite('Configuration', (): void => {
   suite('clone', (): void => {
     test('returns a cloned configuration.', async (): Promise<void> => {
       const configuration = new Configuration({
-        isColorEnabled: true,
+        colorLevel: ColorLevel.Ansi,
         isInteractiveSession: false,
         isQuietModeEnabled: true,
         isUtf8Enabled: false,
@@ -35,36 +36,24 @@ suite('Configuration', (): void => {
     });
   });
 
-  suite('withColor', (): void => {
-    test('enables color mode if set to true.', async (): Promise<void> => {
+  suite('withColorLevel', (): void => {
+    test('sets the color level.', async (): Promise<void> => {
       const configuration = new Configuration({
-        isColorEnabled: false,
+        colorLevel: ColorLevel.Ansi,
         isInteractiveSession: true,
         isQuietModeEnabled: true,
         isUtf8Enabled: true,
         isVerboseModeEnabled: true
-      }).withColor(true);
+      }).withColorLevel(ColorLevel.Truecolor);
 
-      assert.that(configuration.isColorEnabled).is.true();
-    });
-
-    test('disables color mode if set to false.', async (): Promise<void> => {
-      const configuration = new Configuration({
-        isColorEnabled: true,
-        isInteractiveSession: true,
-        isQuietModeEnabled: true,
-        isUtf8Enabled: true,
-        isVerboseModeEnabled: true
-      }).withColor(false);
-
-      assert.that(configuration.isColorEnabled).is.false();
+      assert.that(configuration.colorLevel).is.equalTo(ColorLevel.Truecolor);
     });
   });
 
   suite('withInteractiveSession', (): void => {
     test('enables interactive session mode if set to true.', async (): Promise<void> => {
       const configuration = new Configuration({
-        isColorEnabled: true,
+        colorLevel: ColorLevel.Ansi,
         isInteractiveSession: false,
         isQuietModeEnabled: true,
         isUtf8Enabled: true,
@@ -76,7 +65,7 @@ suite('Configuration', (): void => {
 
     test('disables interactive session mode if set to false.', async (): Promise<void> => {
       const configuration = new Configuration({
-        isColorEnabled: true,
+        colorLevel: ColorLevel.Ansi,
         isInteractiveSession: true,
         isQuietModeEnabled: true,
         isUtf8Enabled: true,
@@ -90,7 +79,7 @@ suite('Configuration', (): void => {
   suite('withQuietMode', (): void => {
     test('enables quiet mode if set to true.', async (): Promise<void> => {
       const configuration = new Configuration({
-        isColorEnabled: true,
+        colorLevel: ColorLevel.Ansi,
         isInteractiveSession: true,
         isQuietModeEnabled: false,
         isUtf8Enabled: true,
@@ -102,7 +91,7 @@ suite('Configuration', (): void => {
 
     test('disables quiet mode if set to false.', async (): Promise<void> => {
       const configuration = new Configuration({
-        isColorEnabled: true,
+        colorLevel: ColorLevel.Ansi,
         isInteractiveSession: true,
         isQuietModeEnabled: true,
         isUtf8Enabled: true,
@@ -116,7 +105,7 @@ suite('Configuration', (): void => {
   suite('withUtf8', (): void => {
     test('enables UTF8 mode if set to true.', async (): Promise<void> => {
       const configuration = new Configuration({
-        isColorEnabled: true,
+        colorLevel: ColorLevel.Ansi,
         isInteractiveSession: true,
         isQuietModeEnabled: true,
         isUtf8Enabled: false,
@@ -128,7 +117,7 @@ suite('Configuration', (): void => {
 
     test('disables UTF8 mode if set to false.', async (): Promise<void> => {
       const configuration = new Configuration({
-        isColorEnabled: true,
+        colorLevel: ColorLevel.Ansi,
         isInteractiveSession: true,
         isQuietModeEnabled: true,
         isUtf8Enabled: true,
@@ -142,7 +131,7 @@ suite('Configuration', (): void => {
   suite('withVerboseMode', (): void => {
     test('enables verbose mode if set to true.', async (): Promise<void> => {
       const configuration = new Configuration({
-        isColorEnabled: true,
+        colorLevel: ColorLevel.Ansi,
         isInteractiveSession: true,
         isQuietModeEnabled: true,
         isUtf8Enabled: true,
@@ -154,7 +143,7 @@ suite('Configuration', (): void => {
 
     test('disables verbose mode if set to false.', async (): Promise<void> => {
       const configuration = new Configuration({
-        isColorEnabled: true,
+        colorLevel: ColorLevel.Ansi,
         isInteractiveSession: true,
         isQuietModeEnabled: true,
         isUtf8Enabled: true,
