@@ -91,9 +91,9 @@ class Buntstift {
     chalk.level = this.configuration.isColorEnabled ? Buntstift.detectedColorLevel : 0;
 
     if (this.configuration.isUtf8Enabled) {
-      Buntstift.spinner = ora({ color: 'white', spinner: 'dots' });
+      Buntstift.spinner.spinner = 'dots';
     } else {
-      Buntstift.spinner = ora({ color: 'white', spinner: 'line' });
+      Buntstift.spinner.spinner = 'line';
     }
   }
 
