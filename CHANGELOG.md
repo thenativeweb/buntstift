@@ -1,3 +1,10 @@
+## [5.0.1](https://github.com/thenativeweb/buntstift/compare/5.0.0...5.0.1) (2021-12-05)
+
+
+### Bug Fixes
+
+* Trigger an update to have a new version with updated dependencies. ([e4e3406](https://github.com/thenativeweb/buntstift/commit/e4e3406eda1f66f45c6bc8c442ef019a96d46529))
+
 # [5.0.0](https://github.com/thenativeweb/buntstift/compare/4.0.34...5.0.0) (2021-08-16)
 
 
