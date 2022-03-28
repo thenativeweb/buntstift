@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "assertthat": "6.4.0",
-    "isansi": "2.0.13",
+    "isansi": "2.0.14",
     "record-stdstreams": "3.0.73",
     "roboter": "12.7.1",
     "semantic-release-configuration": "2.0.7",
