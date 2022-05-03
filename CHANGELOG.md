@@ -1,3 +1,10 @@
+## [5.0.2](https://github.com/thenativeweb/buntstift/compare/5.0.1...5.0.2) (2022-05-03)
+
+
+### Bug Fixes
+
+* bump inquirer from 8.2.2 to 8.2.4 ([#480](https://github.com/thenativeweb/buntstift/issues/480)) ([e637bde](https://github.com/thenativeweb/buntstift/commit/e637bdeec04fbfc659e1b5b677ce840fd1dee8ce))
+
 ## [5.0.1](https://github.com/thenativeweb/buntstift/compare/5.0.0...5.0.1) (2021-12-05)
 
 
