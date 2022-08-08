@@ -24,10 +24,10 @@
   "main": "build/lib/buntstift.js",
   "types": "build/lib/buntstift.d.ts",
   "dependencies": {
-    "@types/inquirer": "8.2.1",
+    "@types/inquirer": "9.0.0",
     "chalk": "4.1.2",
     "humanize-string": "2.1.0",
-    "inquirer": "8.2.4",
+    "inquirer": "9.1.0",
     "ora": "5.4.1"
   },
   "devDependencies": {
